@@ -38,7 +38,7 @@ In [4]: clausie.print_propositions(propositions)
 ([Einstein], [died], [], [], [], [])
 ([Einstein], [died], [], [], [], [in, Princeton])
 ([Einstein], [died], [], [], [], [in, 1921])
-  
+```
 
 ## License
 
