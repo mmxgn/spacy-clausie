@@ -7,6 +7,38 @@ and Rainer Gemulla. If you use it in your code please note that there are slight
 ```
 Del Corro Luciano, and Rainer Gemulla. "Clausie: clause-based open information extraction." Proceedings of the 22nd international conference on World Wide Web. ACM, 2013.
 ```
+## Requirements
+`spacy>=2.0.0`
+
+## Installation
+```
+$ git clone https://github.com/mmxgn/clausiepy.git
+$ python3 setup.py build 
+$ python3 setup.py install [--user]
+```
+
+## Usage
+
+```
+$ ipython3
+
+In [1]: clauses = clausie.clausie('Albert Einstein died in Princeton in 1921.')
+In [2]: clauses
+Out[2]: 
+[{'S': [Einstein],
+  'V': [died],
+  'O': [],
+  'IO': [],
+  'XCOMP': [],
+  'C': [],
+  'type': 'SV',
+  'A?': [in, in]}]
+In [3]: propositions = clausie.extract_propositions(clauses)
+In [4]: clausie.print_propositions(propositions)
+([Einstein], [died], [], [], [], [])
+([Einstein], [died], [], [], [], [in, Princeton])
+([Einstein], [died], [], [], [], [in, 1921])
+  
 
 ## License
 
