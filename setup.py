@@ -13,10 +13,10 @@ setup(
     name="clausiepy",
     version="0.0.1",
     packages=find_packages(),
-   # scripts=['clausie/clausie.py', 'clausie/__init__.py'],
+    scripts=['clausiepy/clausiepy.py', 'clausiepy/__init__.py'],
     install_requires=['spacy>=2.0.0'],
     package_data={
-            'clausiepy': ['*.txt']
+            'clausiepy': ['dictionaries/*.txt']
     },
     
     author="Emmanouil Theofanis Chourdakis",
