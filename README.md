@@ -22,9 +22,10 @@ $ python3 setup.py install [--user]
 ```
 $ ipython3
 
-In [1]: clauses = clausie.clausie('Albert Einstein died in Princeton in 1921.')
-In [2]: clauses
-Out[2]: 
+In [1]: import clausiepy as clausie
+In [2]: clauses = clausie.clausie('Albert Einstein died in Princeton in 1921.')
+In [3]: clauses
+Out[3]: 
 [{'S': [Einstein],
   'V': [died],
   'O': [],
@@ -33,8 +34,9 @@ Out[2]:
   'C': [],
   'type': 'SV',
   'A?': [in, in]}]
-In [3]: propositions = clausie.extract_propositions(clauses)
-In [4]: clausie.print_propositions(propositions)
+In [4]: propositions = clausie.extract_propositions(clauses)
+In [5]: clausie.print_propositions(propositions)
+Out [5]:
 ([Einstein], [died], [], [], [], [])
 ([Einstein], [died], [], [], [], [in, Princeton])
 ([Einstein], [died], [], [], [], [in, 1921])
