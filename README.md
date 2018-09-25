@@ -1,2 +1,13 @@
 # clausiepy
 Implementation of the ClausIE information extraction system for python+spacy
+
+## Credits
+While this is a re-implementation by me, original research work (and also the dictionaries) are attributed to Luciano Del Corro
+and Rainer Gemulla. If you use it in your code please note that there are slight modifications in the code in order to make it work with the spacy dependency parser, and also cite:
+```
+Del Corro Luciano, and Rainer Gemulla. "Clausie: clause-based open information extraction." Proceedings of the 22nd international conference on World Wide Web. ACM, 2013.
+```
+
+## License
+
+This code is licensed under the (Creative Commons Attribution-ShareAlike 3.0 Unported License)[https://creativecommons.org/licenses/by-sa/3.0/].
