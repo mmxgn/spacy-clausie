@@ -1,0 +1,27 @@
+# This is a comment
+
+act
+appear
+be
+become
+come
+come out
+end up
+get
+go
+grow
+fall
+feel
+keep
+leave
+look
+prove
+remain
+seem
+smell
+sound
+stay
+taste
+turn
+turn up
+wind up

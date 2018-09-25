@@ -1,0 +1,9 @@
+# This is a comment
+# these adverbials are always ignored if they form a constituent of a clause
+# E.g., from "I am so happy," we ignore "so" and extract "I" / "am" / "happy".
+so
+then
+thus
+why
+as
+even
