@@ -2,7 +2,7 @@
 Implementation of the ClausIE information extraction system for python+spacy
 
 ## Credits
-While this is a re-implementation by me, original research work (and also the dictionaries) are attributed to Luciano Del Corro
+While this is a re-implementation by me, original research work (and also the dictionaries) is attributed to Luciano Del Corro
 and Rainer Gemulla. If you use it in your code please note that there are slight modifications in the code in order to make it work with the spacy dependency parser, and also cite:
 ```
 Del Corro Luciano, and Rainer Gemulla. "Clausie: clause-based open information extraction." Proceedings of the 22nd international conference on World Wide Web. ACM, 2013.
@@ -13,6 +13,7 @@ Del Corro Luciano, and Rainer Gemulla. "Clausie: clause-based open information e
 ## Installation
 ```
 $ git clone https://github.com/mmxgn/clausiepy.git
+$ cd clausiepy
 $ python3 setup.py build 
 $ python3 setup.py install [--user]
 ```
@@ -41,6 +42,8 @@ Out [5]:
 ([Einstein], [died], [], [], [], [in, Princeton])
 ([Einstein], [died], [], [], [], [in, 1921])
 ```
+Note that `clausie`, and `extract_propositions` here return dictionaries and lists of `spacy` span objects which you
+can subsequently use however you like.
 
 ## License
 
