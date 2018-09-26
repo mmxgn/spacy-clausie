@@ -24,7 +24,7 @@ $ python3 setup.py install [--user]
 $ ipython3
 
 In [1]: import clausiepy as clausie
-In [2]: clauses = clausie.clausie('Albert Einstein died in Princeton in 1921.')
+In [2]: clauses = clausie.clausie('Albert Einstein died in Princeton in 1955.')
 In [3]: clauses
 Out[3]: 
 [{'S': [Einstein],
@@ -40,7 +40,7 @@ In [5]: clausie.print_propositions(propositions)
 Out [5]:
 ([Einstein], [died], [], [], [], [])
 ([Einstein], [died], [], [], [], [in, Princeton])
-([Einstein], [died], [], [], [], [in, 1921])
+([Einstein], [died], [], [], [], [in, 1955])
 ```
 Note that `clausie`, and `extract_propositions` here return dictionaries and lists of `spacy` span objects which you
 can subsequently use however you like.
