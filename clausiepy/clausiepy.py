@@ -21,29 +21,86 @@ import spacy
 from spacy import displacy
 nlp = spacy.load('en')
 
-# Load dictionaries
-dict_non_ext_copular_fname = os.path.join(dirpath, "dictionaries/dict-not-ext-copular.txt")
-with open(dict_non_ext_copular_fname) as f:
-    dict_non_ext_copular = [s.strip() for s in f.readlines() if len(s.strip()) > 0 and s.lstrip()[0] != '#']
-    
-dict_ext_copular_fname = os.path.join(dirpath,"dictionaries/dict-ext-copular.txt")
-with open(dict_ext_copular_fname) as f:
-    dict_ext_copular = [s.strip() for s in f.readlines() if len(s.strip()) > 0 and s.lstrip()[0] != '#']    
-dict_non_ext_copular, dict_ext_copular
+# Dictionaries
+dict_non_ext_copular = ['die', 'walk']
+dict_ext_copular = ['act',
+                    'appear',
+                    'be',
+                    'become',
+                    'come',
+                    'come out',
+                    'end up',
+                    'get',
+                    'go',
+                    'grow',
+                    'fall',
+                    'feel',
+                    'keep',
+                    'leave',
+                    'look',
+                    'prove',
+                    'remain',
+                    'seem',
+                    'smell',
+                    'sound',
+                    'stay',
+                    'taste',
+                    'turn',
+                    'turn up',
+                    'wind up',
+                    'live',
+                    'come',
+                    'go',
+                    'stand',
+                    'lie',
+                    'love',
+                    'do',
+                    'try']
 
-dict_copular_fname = os.path.join(dirpath,"dictionaries/dict-copular.txt")
-with open(dict_copular_fname) as f:
-    dict_copular = [s.strip() for s in f.readlines() if len(s.strip()) > 0 and s.lstrip()[0] != '#']    
+dict_copular = ['act',
+                'appear',
+                'be',
+                'become',
+                'come',
+                'come out',
+                'end up',
+                'get',
+                'go',
+                'grow',
+                'fall',
+                'feel',
+                'keep',
+                'leave',
+                'look',
+                'prove',
+                'remain',
+                'seem',
+                'smell',
+                'sound',
+                'stay',
+                'taste',
+                'turn',
+                'turn up',
+                'wind up']
+
+dict_complex_transitive = ['bring',
+                           'catch',
+                           'drive',
+                           'get',
+                           'keep',
+                           'lay',
+                           'lead',
+                           'place',
+                           'put',
+                           'set',
+                           'sit',
+                           'show',
+                           'stand',
+                           'slip',
+                           'take']
 
 
-dict_complex_transitive_fname = os.path.join(dirpath,"dictionaries/dict-complex-transitive.txt")
-with open(dict_complex_transitive_fname) as f:
-    dict_complex_transitive = [s.strip() for s in f.readlines() if len(s.strip()) > 0 and s.lstrip()[0] != '#']    
-dict_non_ext_copular, dict_ext_copular, dict_complex_transitive
-
-dict_ignore_fname = os.path.join(dirpath,"dictionaries/dict-adverbs-ignore.txt")
-with open(dict_ignore_fname) as f:
-    dict_ignore = [s.strip() for s in f.readlines() if len(s.strip()) > 0 and s.lstrip()[0] != '#']    
+dict_ignore = ['so', 'then', 'thus', 'why', 'as', 'even']   
 
 
 def translate_clause(clause):

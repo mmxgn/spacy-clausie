@@ -1,8 +1,0 @@
-# Dictionary for question 6
-# if these verbs appear in a clause that does not have an object or complement, then the clause 
-# type is SV instead of SVA (e.g., "He died in Princeton" is SV)
-
-# This is a comment
-
-die
-walk

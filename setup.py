@@ -15,9 +15,6 @@ setup(
     packages=find_packages(),
     scripts=['clausiepy/clausiepy.py', 'clausiepy/__init__.py'],
     install_requires=['spacy>=2.0.0'],
-    package_data={
-            'clausiepy': ['dictionaries/*.txt']
-    },
     
     author="Emmanouil Theofanis Chourdakis",
     author_email="e.t.chourdakis@qmul.ac.uk", 
