@@ -13,7 +13,7 @@ setup(
     name="clausiepy",
     version="0.0.1",
     packages=find_packages(),
-    scripts=['clausiepy/clausiepy.py', 'clausiepy/__init__.py'],
+    #scripts=['clausiepy/clausiepy.py', 'clausiepy/__init__.py'],
     install_requires=['spacy>=2.0.0'],
     
     author="Emmanouil Theofanis Chourdakis",

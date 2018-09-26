@@ -22,7 +22,7 @@ def remove_apostrophe(string):
         
     return string
 
-@problog_export_nondet('+str', '-str', '-str', '-str', '-str', '-str', '-str', '-str')
+@problog_export_nondet('+str', '-str', '-str', '-str', '-str', '-str', '-str')
 def clausie(sent):
     
     sent = remove_apostrophe(sent)
@@ -34,6 +34,12 @@ def clausie(sent):
     result = []
     for proposition in propositions:
         ptext = cl.proposition_text(proposition)
-        result.append(ptext)
+        
+        prop = []
+        
+        for p in ptext:
+            prop.append(" ".join([pp.text for pp in p]))
+            
+        result.append(tuple(prop))
         
     return result

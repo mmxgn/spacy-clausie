@@ -20,6 +20,8 @@ $ python3 setup.py install [--user]
 
 ## Usage
 
+### Python
+
 ```
 $ ipython3
 
@@ -44,6 +46,41 @@ Out [5]:
 ```
 Note that `clausie`, and `extract_propositions` here return dictionaries and lists of `spacy` span objects which you
 can subsequently use however you like.
+
+### Problog
+
+Copy `problog/clausiepy_pl.py` at the same directory as your problog `.pl` files, include it 
+in your scripts with:
+
+```
+:- use_module('clausiepy_pl.py').
+```
+
+And use it via the `clausie/7` predicate. An example can be seen in `problog/test_clausie.pl`:
+
+```
+:-use_module('clausiepy_pl.py').
+
+query(clausie('Albert Einstein died in Princeton in 1955.', Subject, Verb, IndirectObject, DirectObject, Complement, Adverb)).
+
+```
+
+You can run it with:
+
+```
+problog test_clausie.pl
+```
+
+and get the output:
+
+```
+            clausie('Albert Einstein died in Princeton in 1955.',Einstein,died,,,):	1         
+     clausie('Albert Einstein died in Princeton in 1955.',Einstein,died,,,in 1955):	1         
+clausie('Albert Einstein died in Princeton in 1955.',Einstein,died,,,in Princeton):	1
+```
+
+The variables `Subject`, `Verb`, etc. are self explanatory.
+
 
 ## License
 
