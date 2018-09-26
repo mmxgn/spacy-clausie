@@ -61,7 +61,7 @@ And use it via the `clausie/7` predicate. An example can be seen in `problog/tes
 ```
 :-use_module('clausiepy_pl.py').
 
-query(clausie('Albert Einstein died in Princeton in 1955.', Subject, Verb, IndirectObject, DirectObject, Complement, Adverb)).
+query(clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.', Subject, Verb, IndirectObject, DirectObject, Complement, Adverb)).
 
 ```
 
@@ -74,9 +74,10 @@ problog test_clausie.pl
 and get the output:
 
 ```
-            clausie('Albert Einstein died in Princeton in 1955.',Einstein,died,,,):	1         
-     clausie('Albert Einstein died in Princeton in 1955.',Einstein,died,,,in 1955):	1         
-clausie('Albert Einstein died in Princeton in 1955.',Einstein,died,,,in Princeton):	1
+                             clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',Einstein,died,,,,):	1         
+                      clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',Einstein,died,,,,in 1955):	1         
+                 clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',Einstein,died,,,,in Princeton):	1         
+clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',Einstein,is,,,a scientist of the 20th century,):	1  
 ```
 
 The variables `Subject`, `Verb`, etc. are self explanatory.
