@@ -24,7 +24,7 @@ $ python3 setup.py install [--user]
 $ ipython3
 
 In [1]: import clausiepy as clausie
-In [2]: clauses = clausie.clausie('Albert Einstein died in Princeton in 1921.')
+In [2]: clauses = clausie.clausie('Albert Einstein died in Princeton in 1955.')
 In [3]: clauses
 Out[3]: 
 [{'S': [Einstein],
