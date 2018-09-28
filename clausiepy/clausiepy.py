@@ -528,12 +528,12 @@ def proposition_text(prop):
         
     
     if 'indirect object' in prop:
-        indirect_object = [t for t in prop['indirect object'].children if t.dep_ in ['det', 'amod']] + [prop['indirect object']]
+        indirect_object = [t for t in prop['indirect object'].children if t.dep_ in ['det', 'amod', 'compound']] + [prop['indirect object']]
     else:
         indirect_object = []
         
     if 'direct object' in prop:
-        direct_object = [t for t in prop['direct object'].children if t.dep_ in ['det', 'amod']] + [prop['direct object']]
+        direct_object = [t for t in prop['direct object'].children if t.dep_ in ['det', 'amod', 'compound']] + [prop['direct object']]
     else:
         direct_object = []
         
@@ -595,7 +595,7 @@ if __name__ == "__main__":
             "In 1921, AE has won the Nobel Prize . ",
             "Nicolas Cage graciously ate and enjoyed the blue fruit and the yellow steak.",
             "A bull was feeding in a meadow until a lion approached the bull",
-            "The attack of the lion caused the death of the bull."
+            "The attack of the lion caused the death of the bull.",
             ]
     
     for sent in sentences:
