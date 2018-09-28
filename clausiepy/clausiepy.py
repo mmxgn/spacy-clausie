@@ -387,11 +387,12 @@ def extract_propositions(clauses):
                 
                 if type(v) == str:
                     v = nlp(v)[0]
+                
                 prop = (s, v)
 
                 if type_ in ['SV']:
                     if prop not in propositions:
-                        if v.text in ['is']:
+                        if v.text in ['is' ,'are']:
                             propositions.append({'subject':s, 'verb':nlp("exists")[0]})
                         else:
                             propositions.append({'subject': s,  'verb':v})
@@ -553,7 +554,9 @@ def proposition_text(prop):
             adverb = [t for t in prop['adverb'].subtree]
     else:
         adverb = []
-    verb = [prop['verb']]
+        
+    verb_aux = [p for p in prop['verb'].lefts if p.dep_ in ['aux', 'auxpass']]
+    verb = verb_aux+[prop['verb']]
     
     return subject , verb , indirect_object , direct_object , complement , adverb
 
@@ -567,7 +570,7 @@ def proposition_text_str(prop):
         if len(l)>0:
             str_list += l
             
-    return " ".join([t.text for t in str_list])
+    return " ".join([t.text for t in str_list]) + " ."
 
 def print_propositions(plist):
     for prop in plist:
@@ -596,6 +599,7 @@ if __name__ == "__main__":
             "Nicolas Cage graciously ate and enjoyed the blue fruit and the yellow steak.",
             "A bull was feeding in a meadow until a lion approached the bull",
             "The attack of the lion caused the death of the bull.",
+            "Some crows are eating rubbish at a garbage dump.",
             ]
     
     for sent in sentences:
