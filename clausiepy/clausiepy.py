@@ -515,8 +515,17 @@ def get_conj_text(token):
                 
     return " ".join([t.text for t in L])
             
-def proposition_text(prop):    
-    subject = [t for t in prop['subject'].children if t.dep_ in ['det', 'amod']]  + [prop['subject']]
+def proposition_text(prop):       
+    
+   # subject = [t for t in prop['subject'].children if t.dep_ in ['det', 'amod']]  + [prop['subject']]
+    subject = [t for t in prop['subject'].lefts] + [prop['subject']]
+    
+    # Add of the
+    for t in prop['subject'].rights:
+        if t.dep_ in ['prep']:
+            subject += [d for d in t.subtree]
+        
+        
     
     if 'indirect object' in prop:
         indirect_object = [t for t in prop['indirect object'].children if t.dep_ in ['det', 'amod']] + [prop['indirect object']]
@@ -548,12 +557,27 @@ def proposition_text(prop):
     
     return subject , verb , indirect_object , direct_object , complement , adverb
 
+def proposition_text_str(prop):
+    """ Like proposition_text(prop) but returns a string isntead """
+    L = proposition_text(prop)
+    
+    str_list = []
+    
+    for l in L:
+        if len(l)>0:
+            str_list += l
+            
+    return " ".join([t.text for t in str_list])
+
 def print_propositions(plist):
     for prop in plist:
         text = proposition_text(prop)
         print(text)
 
 if __name__ == "__main__":
+    
+    from util import *
+    
     print("Testing with various sentences")
     sentences = [
             "Bell , a telecommunication company based in Los Angeles , makes and distributes electronic , computer and building products",
@@ -570,12 +594,15 @@ if __name__ == "__main__":
             "AE has won the Nobel Prize in 1921 .",
             "In 1921, AE has won the Nobel Prize . ",
             "Nicolas Cage graciously ate and enjoyed the blue fruit and the yellow steak.",
-            "A bull was feeding in a meadow until a lion approached the bull"
+            "A bull was feeding in a meadow until a lion approached the bull",
+            "The attack of the lion caused the death of the bull."
             ]
     
     for sent in sentences:
         print("Sentence:")
         print(sent)
+        print("Dependencies:")
+        tree_from_doc(nlp(sent)).show()
         print("Clauses:")
         clauses = clausie(sent)
         print()
@@ -584,7 +611,9 @@ if __name__ == "__main__":
         print()
         print("Propositions:")
         propositions = extract_propositions(clauses)
-        print_propositions(propositions)
+        for prop in propositions:
+            print(proposition_text_str(prop))
+        #print_propositions(propositions)
 
         print("-----")
 
