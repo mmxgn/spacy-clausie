@@ -427,7 +427,7 @@ def extract_propositions(clauses):
                         # AE had a faboulous hairstyle -> Hairstyle was faboulous
                         for c in o.children:
                             if c.dep_ == 'amod':
-                                prop = {'subject': o, 'verb':[t for t in nlp('is')][0], 'adverb':c}
+                                prop = {'subject': o, 'verb':[t for t in nlp('is')][0], 'complement':c}
                                 if prop not in propositions:
                                     propositions.append(prop)
 
