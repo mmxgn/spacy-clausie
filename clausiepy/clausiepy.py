@@ -412,6 +412,8 @@ def extract_propositions(clauses):
                     append_conjugates(adverbs)
                     
                     for o in objects:
+                        
+                        
                         prop = {'subject': s,  'verb':v, 'direct object':o}
                         if prop not in propositions:
                             propositions.append(prop)
@@ -420,6 +422,16 @@ def extract_propositions(clauses):
                                 prop = {'subject': s,  'verb':v, 'direct object':o, 'adverb':a}
                                 if prop not in propositions:
                                     propositions.append(prop)                                
+                                    
+                        # Extractions of form: 
+                        # AE had a faboulous hairstyle -> Hairstyle was faboulous
+                        for c in o.children:
+                            if c.dep_ == 'amod':
+                                prop = {'subject': o, 'verb':[t for t in nlp('is')][0], 'adverb':c}
+                                if prop not in propositions:
+                                    propositions.append(prop)
+
+                                    
                 elif type_ in ['SVA']:
                     adverbs = clause['A']
                     append_conjugates(adverbs)
@@ -601,6 +613,8 @@ if __name__ == "__main__":
             "The attack of the lion caused the death of the bull.",
             "Some crows are eating rubbish at a garbage dump.",
             "AE knocked the door three times.",
+            "All crows have a beak.",
+            "AE had a faboulous hairstyle.",
             ]
     
     for sent in sentences:
