@@ -1,0 +1,15 @@
+bring
+catch
+drive
+get
+keep
+lay
+lead
+place
+put
+set
+sit
+show
+stand
+slip
+take
