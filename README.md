@@ -8,6 +8,19 @@ and Rainer Gemulla. If you use it in your code please note that there are slight
 Del Corro Luciano, and Rainer Gemulla: "Clausie: clause-based open information extraction." 
 Proceedings of the 22nd international conference on World Wide Web. ACM, 2013.
 ```
+
+It would be helpful to also cite this specific implementation if you are using it:
+```
+@InProceedings{chourdakis2018grammar,
+author = {Chourdakis, E.T and Reiss, J.D.},
+title = {Grammar Informed Sound Effect Retrieval for Soundscape Generation},
+booktitle = {DMRN+ 13: Digital Music Research Network One-day Workshop},
+month = {November},
+year = {2018},
+address = {London, UK},
+pages={9}
+}```
+
 ## Requirements
 `spacy>=2.0.0`
 
