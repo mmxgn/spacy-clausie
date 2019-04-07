@@ -19,7 +19,8 @@ month = {November},
 year = {2018},
 address = {London, UK},
 pages={9}
-}```
+}
+```
 
 ## Requirements
 `spacy>=2.0.0`
