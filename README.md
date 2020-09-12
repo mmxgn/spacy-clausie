@@ -51,7 +51,8 @@ $ python setup.py test
 $ ipython
 In [1]: import spacy                                                                                                                                               
 In [2]: import claucy                                                                                                                                               
-In [3]: nlp = spacy.load("en")                                                                                                                                     In [4]: claucy.add_to_pipe(nlp)                                                                                                                                     
+In [3]: nlp = spacy.load("en")
+In [4]: claucy.add_to_pipe(nlp)                                                                                                                                     
 In [5]: doc = nlp("AE died in Princeton in 1955.")                                                                                                                 
 In [6]: doc._.clauses                                                                                                                                               
 Out[6]: [<SV, AE, died, None, None, None, [in Princeton, in 1955]>]
