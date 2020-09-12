@@ -1,5 +1,11 @@
-# clausiepy
+# ClauCy
 Implementation of the ClausIE information extraction system for python+spacy
+
+## Changelog from v 0.1.0
+
+- Rewrote it to match more closely the algorithm in the paper.
+- Reimplemented it as a `spacy` pipeline component (clauses under `doc._.clauses`)
+- Added tests from the paper
 
 ## Credits
 While this is a re-implementation by me, original research work (and also the dictionaries) is attributed to Luciano Del Corro
@@ -23,14 +29,18 @@ pages={9}
 ```
 
 ## Requirements
-`spacy>=2.0.0`
+- `spacy>=2.3.0`
+- Python 3
 
 ## Installation
 ```
-$ git clone https://github.com/mmxgn/clausiepy.git
-$ cd clausiepy
-$ python3 setup.py build 
-$ python3 setup.py install [--user]
+$ git clone https://github.com/mmxgn/spacy-clausie.git
+$ cd spacy-clausie
+$ python setup.py build 
+$ python setup.py install [--user]
+
+# Optionally
+$ python setup.py test
 ```
 
 ## Usage
@@ -38,29 +48,31 @@ $ python3 setup.py install [--user]
 ### Python
 
 ```
-$ ipython3
-
-In [1]: import clausiepy as clausie
-In [2]: clauses = clausie.clausie('Albert Einstein died in Princeton in 1955.')
-In [3]: clauses
-Out[3]: 
-[{'S': [Einstein],
-  'V': [died],
-  'O': [],
-  'IO': [],
-  'XCOMP': [],
-  'C': [],
-  'type': 'SV',
-  'A?': [in, in]}]
-In [4]: propositions = clausie.extract_propositions(clauses)
-In [5]: clausie.print_propositions(propositions)
-Out [5]:
-([Einstein], [died], [], [], [], [])
-([Einstein], [died], [], [], [], [in, Princeton])
-([Einstein], [died], [], [], [], [in, 1955])
+$ ipython
+In [1]: import spacy                                                                                                                                               
+In [2]: import claucy                                                                                                                                               
+In [3]: nlp = spacy.load("en")                                                                                                                                     In [4]: claucy.add_to_pipe(nlp)                                                                                                                                     
+In [5]: doc = nlp("AE died in Princeton in 1955.")                                                                                                                 
+In [6]: doc._.clauses                                                                                                                                               
+Out[6]: [<SV, AE, died, None, None, None, [in Princeton, in 1955]>]
+In [7]: propositions = doc._.clauses[0].to_propositions(as_text=True)                                                                                               
+In [8]: propositions                                                                                                                                               
+Out[8]: 
+['AE died in Princeton in 1955',
+ 'AE died in 1955',
+ 'AE died in Princeton']
 ```
-Note that `clausie`, and `extract_propositions` here return dictionaries and lists of `spacy` span objects which you
-can subsequently use however you like.
+
+Setting `as_text=False` will instead give a tuple of spacy spans:
+
+```
+In [9]: propositions = doc._.clauses[0].to_propositions(as_text=False)                                                                                             
+In [10]: propositions                                                                                                                                               
+Out[10]: 
+[(AE, died, in Princeton, in 1955),
+ (AE, died, in 1955),
+ (AE, died, in Princeton)]
+```
 
 ### Problog
 
@@ -68,34 +80,33 @@ Copy `problog/clausiepy_pl.py` at the same directory as your problog `.pl` files
 in your scripts with:
 
 ```
-:- use_module('clausiepy_pl.py').
+:- use_module('claucy_pl.py').
 ```
 
 And use it via the `clausie/7` predicate. An example can be seen in `problog/test_clausie.pl`:
 
 ```
-:-use_module('clausiepy_pl.py').
+:-use_module('claucy_pl.py').
 
-query(clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.', Subject, Verb, IndirectObject, DirectObject, Complement, Adverb)).
-
+query(claucy('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',Predicate,Arg1,Arg2)).
 ```
 
 You can run it with:
 
 ```
-problog test_clausie.pl
+problog test_claucy.pl
 ```
 
 and get the output:
 
 ```
-                             clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',Einstein,died,,,,):	1         
-                      clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',Einstein,died,,,,in 1955):	1         
-                 clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',Einstein,died,,,,in Princeton):	1         
-clausie('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',Einstein,is,,,a scientist of the 20th century,):	1  
+     claucy('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',died,Albert Einstein,in 1955):       1         
+claucy('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',died,Albert Einstein,in Princeton):       1         
+   claucy('Albert Einstein, a scientist of the 20th century, died in Princeton in 1955.',is,Albert Einstein,a scientist):       1      
 ```
 
-The variables `Subject`, `Verb`, etc. are self explanatory.
+The variable `Predicate` comes directly from the verb and `Arg1` and `Arg2` are the first and second arguments.
+
 
 
 ## License
