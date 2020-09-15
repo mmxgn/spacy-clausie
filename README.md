@@ -77,14 +77,14 @@ Out[10]:
 
 ### Problog
 
-Copy `problog/clausiepy_pl.py` at the same directory as your problog `.pl` files, include it 
+Copy `problog/claucy_pl.py` at the same directory as your problog `.pl` files, include it 
 in your scripts with:
 
 ```
 :- use_module('claucy_pl.py').
 ```
 
-And use it via the `clausie/7` predicate. An example can be seen in `problog/test_clausie.pl`:
+And use it via the `claucy/4` predicate. An example can be seen in `problog/test_clausie.pl`:
 
 ```
 :-use_module('claucy_pl.py').
