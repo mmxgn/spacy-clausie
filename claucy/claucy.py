@@ -303,7 +303,7 @@ def extract_clauses(span):
                 break
         if not subject:
             root = verb.root
-            while root.dep_ in ["conj", "cc"]:
+            while root.dep_ in ["conj", "cc", "advcl"]:
                 for c in root.children:
                     if c.dep_ in ["nsubj", "nsubjpass"]:
                         subject = extract_span_from_entity(c)
