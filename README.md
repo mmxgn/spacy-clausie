@@ -51,7 +51,8 @@ $ python setup.py test
 $ ipython
 In [1]: import spacy                                                                                                                                               
 In [2]: import claucy                                                                                                                                               
-In [3]: nlp = spacy.load("en")                                                                                                                                     In [4]: claucy.add_to_pipe(nlp)                                                                                                                                     
+In [3]: nlp = spacy.load("en")
+In [4]: claucy.add_to_pipe(nlp)                                                                                                                                     
 In [5]: doc = nlp("AE died in Princeton in 1955.")                                                                                                                 
 In [6]: doc._.clauses                                                                                                                                               
 Out[6]: [<SV, AE, died, None, None, None, [in Princeton, in 1955]>]
@@ -76,14 +77,14 @@ Out[10]:
 
 ### Problog
 
-Copy `problog/clausiepy_pl.py` at the same directory as your problog `.pl` files, include it 
+Copy `problog/claucy_pl.py` at the same directory as your problog `.pl` files, include it 
 in your scripts with:
 
 ```
 :- use_module('claucy_pl.py').
 ```
 
-And use it via the `clausie/7` predicate. An example can be seen in `problog/test_clausie.pl`:
+And use it via the `claucy/4` predicate. An example can be seen in `problog/test_clausie.pl`:
 
 ```
 :-use_module('claucy_pl.py').
