@@ -298,14 +298,14 @@ def extract_clauses(span):
         # 1.b. find `subject` for verb
         subject = None
         for c in verb.root.children:
-            if c.dep_ in ["nsubj"]:
+            if c.dep_ in ["nsubj", "nsubjpass"]:
                 subject = extract_span_from_entity(c)
                 break
         if not subject:
             root = verb.root
             while root.dep_ in ["conj", "cc"]:
                 for c in root.children:
-                    if c.dep_ in ["nsubj"]:
+                    if c.dep_ in ["nsubj", "nsubjpass"]:
                         subject = extract_span_from_entity(c)
                         break
                 if subject:
@@ -314,7 +314,7 @@ def extract_clauses(span):
                     root = verb.root.head
 
             for c in root.children:
-                if c.dep_ in ["nsubj", "nsubj:pass"]:
+                if c.dep_ in ["nsubj", "nsubj:pass", "nsubjpass"]:
                     subject = extract_span_from_entity(c)
                     break
 
@@ -351,7 +351,7 @@ def extract_clauses(span):
         # 1.f. find adverbials
         adv = []
         for c in verb.root.children:
-            if c.dep_ in ["prep", "advmod"]:
+            if c.dep_ in ["prep", "advmod", "agent"]:
                 adv.append(extract_span_from_entity(c))
 
         clause = Clause(subject, verb, iob, dob, comp, adv)
