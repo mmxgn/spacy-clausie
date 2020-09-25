@@ -61,6 +61,14 @@ sentences = [
         "SVO",
         ["AE has won the Nobel Prize", "AE has won the Nobel Prize in 1921"],
     ],
+    # This are new tests
+    # -----
+    # Thanks to  Reddit user /u/qazzquimby for this one:
+    [
+        "Chester is a banker by trade, but is dreaming of becoming a great dancer.",
+        "SVC",
+        ["Chester is a banker", "Chester is dreaming of becoming a great dancer."],
+    ],
 ]
 
 
@@ -103,7 +111,9 @@ class Test_ClauCy(unittest.TestCase):
         claucy.add_to_pipe(nlp)
         for sent in sentences:
             doc = nlp(sent[0])
-            props = doc._.clauses[0].to_propositions(as_text=True)
+            props = []
+            for clause in doc._.clauses:
+                props += clause.to_propositions(as_text=True,inflect=None)
             assert len(props) == len(
                 sent[2]
             ), "Expected {} propositions, but got {}.".format(len(sent[2]), len(props))

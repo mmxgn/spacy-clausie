@@ -9,8 +9,14 @@ Clausie as a spacy library
 """
 
 import spacy
+import lemminflect
+import logging
+
 from spacy.tokens import Span, Doc
 from spacy.matcher import Matcher
+from lemminflect import getInflection
+
+logging.basicConfig(level=logging.INFO)
 
 # DO NOT SET MANUALLY
 MOD_CONSERVATIVE = False
@@ -191,7 +197,12 @@ class Clause:
             self.type, self.S, self.V, self.I, self.O, self.C, self.A
         )
 
-    def to_propositions(self, as_text: bool = False):
+    def to_propositions(self, as_text: bool = False, inflect: str = "VBD", capitalize: bool = False):
+
+        if inflect and not as_text:
+            logging.warn("`inflect' argument is ignored when `as_text==False'")
+        if capitalize and not as_text:
+            logging.warn("`capitalize' agrument is ignored when `as_text==False'")
 
         propositions = []
 
@@ -269,8 +280,39 @@ class Clause:
         if len(propositions) > 0:
             propositions = list(set(propositions))
 
+        # Convert to text if `as_text' is set.
         if as_text:
-            return [" ".join([str(t) for t in p]) for p in propositions]
+            texts = [
+                " ".join(
+                    [
+                        " ".join(
+                            [
+                                str(
+                                    t._.inflect(inflect)
+                                )  # Inflect the verb according to the `inflect` flag
+                                if t.pos_ in ["VERB"]  # If t is a verb
+                                and "AUX"
+                                not in [
+                                    tt.pos_ for tt in t.lefts
+                                ]  # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
+                                and t.dep_ not in ['pcomp'] # t `deamed of becoming a dancer`
+                                and inflect  # and the `inflect' flag is set
+                                else str(t)
+                                for t in s
+                            ]
+                        )
+                        for s in p
+                    ]
+                )
+                for p in propositions
+            ]
+
+            if capitalize:
+                # Capitalize and add a full stop.
+                return [text.capitalize() + "." for text in texts]
+            else:
+                return texts       
+
         return propositions
 
 
@@ -303,15 +345,21 @@ def extract_clauses(span):
                 break
         if not subject:
             root = verb.root
-            while root.dep_ in ["conj", "cc", "advcl"]:
+            while root.dep_ in ["conj", "cc", "advcl", "acl", "ccomp"]:
                 for c in root.children:
                     if c.dep_ in ["nsubj", "nsubjpass"]:
                         subject = extract_span_from_entity(c)
                         break
+                    if c.dep_ in ["acl", "advcl"]:
+                        subject = extract_span_from_entity(find_verb_subject(c))
                 if subject:
                     break
                 else:
-                    root = verb.root.head
+                    # Break cycles
+                    if root == verb.root.head:
+                        break
+                    else:
+                        root = verb.root.head
 
             for c in root.children:
                 if c.dep_ in ["nsubj", "nsubj:pass", "nsubjpass"]:
@@ -412,6 +460,23 @@ def extract_ccs_from_token(token):
     return entities
 
 
+def find_verb_subject(v):
+    """
+    Returns the nsubj, nsubjpass of the verb. If it does not exist and the root is a head,
+    find the subject of that verb instead. 
+    """
+    if v.dep_ in ["nsubj", "nsubjpass", "nsubj:pass"]:
+        return v
+    elif v.dep_ in ["advcl", "acl"]:
+        return find_verb_subject(v.head)
+
+    for c in v.children:
+        if c.dep_ in ["nsubj", "nsubjpass", "nsubj:pass"]:
+            return c
+        elif c.dep_ in ["advcl", "acl"]:
+            return find_verb_subject(v.head)
+
+
 if __name__ == "__main__":
     import spacy
 
@@ -419,10 +484,11 @@ if __name__ == "__main__":
     add_to_pipe(nlp)
 
     doc = nlp(
-        "Chester is a banker by trade, but is dreaming of becoming a great dancer."
+        #"Chester is a banker by trade, but is dreaming of becoming a great dancer."
+        " A cat , hearing that the birds in a certain aviary were ailing dressed himself up as a physician , and , taking his cane and a bag of instruments becoming his profession , went to call on them ."
     )
 
     print(doc._.clauses)
     for clause in doc._.clauses:
-        print(clause.to_propositions(as_text=False))
+        print(clause.to_propositions(as_text=True, capitalize=True))
     print(doc[:].noun_chunks)
