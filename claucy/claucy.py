@@ -110,9 +110,9 @@ class Clause:
             Subject.
         verb : Span
             Verb.
-        indirect_object : Span, optional
+        has_indirect_object : Span, optional
             Indirect object, The default is None.
-        direct_object : Span, optional
+        has_direct_object : Span, optional
             Direct object. The default is None.
         complement : Span, optional
             Complement. The default is None.
@@ -136,57 +136,57 @@ class Clause:
 
         self.doc = self.subject.doc
 
-        complementP = self.complement is not None
-        adverbialP = len(self.adverbials) > 0
-        ext_copular = (
-                self.verb is not None and self.verb.root.lemma_ in dictionary["ext_copular"]
+        has_verb = self.verb is not None
+        has_complement = self.complement is not None
+        has_adverbial = len(self.adverbials) > 0
+        has_ext_copular_verb = (
+                has_verb and self.verb.root.lemma_ in dictionary["ext_copular"]
         )
-        non_ext_copular = (
-                self.verb is not None and self.verb.root.lemma_ in dictionary["non_ext_copular"]
+        has_non_ext_copular_verb = (
+                has_verb and self.verb.root.lemma_ in dictionary["non_ext_copular"]
         )
         conservative = MOD_CONSERVATIVE
-        direct_object = self.direct_object is not None
-        indirect_object = self.indirect_object is not None
-        objectP = direct_object or indirect_object
+        has_direct_object = self.direct_object is not None
+        has_indirect_object = self.indirect_object is not None
+        has_object = has_direct_object or has_indirect_object
         complex_transitive = (
-                self.verb is not None
-                and self.verb.root.lemma_ in dictionary["complex_transitive"]
+                has_verb and self.verb.root.lemma_ in dictionary["complex_transitive"]
         )
 
         self.type = "undefined"
 
-        if self.verb is None:
+        if not has_verb:
             self.type = "SVC"
             return
-        if all([not objectP, complementP]):
+        if all([not has_object, has_complement]):
             self.type = "SVC"
-        if all([not objectP, not complementP, not adverbialP]):
+        if all([not has_object, not has_complement, not has_adverbial]):
             self.type = "SV"
-        if all([not objectP, not complementP, adverbialP, non_ext_copular]):
+        if all([not has_object, not has_complement, has_adverbial, has_non_ext_copular_verb]):
             self.type = "SV"
         if all(
-            [not objectP, not complementP, adverbialP, not non_ext_copular, ext_copular]
+            [not has_object, not has_complement, has_adverbial, not has_non_ext_copular_verb, has_ext_copular_verb]
         ):
             self.type = "SVA"
         if all(
             [
-                not objectP,
-                not complementP,
-                adverbialP,
-                not non_ext_copular,
-                not ext_copular,
+                not has_object,
+                not has_complement,
+                has_adverbial,
+                not has_non_ext_copular_verb,
+                not has_ext_copular_verb,
             ]
         ):
             if conservative:
                 self.type = "SVA"
             else:
                 self.type = "SV"
-        if all([objectP, direct_object, indirect_object]):
+        if all([has_object, has_direct_object, has_indirect_object]):
             self.type = "SVOO"
-        if all([objectP, not (direct_object and indirect_object)]):
-            if complementP:
+        if all([has_object, not (has_direct_object and has_indirect_object)]):
+            if has_complement:
                 self.type = "SVOC"
-            elif not (adverbialP and direct_object):
+            elif not (has_adverbial and has_direct_object):
                 self.type = "SVO"
             elif complex_transitive:
                 self.type = "SVOA"
