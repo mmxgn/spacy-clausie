@@ -237,9 +237,9 @@ class Clause:
     def to_propositions(self, as_text: bool = False, inflect: str = "VBD", capitalize: bool = False):
 
         if inflect and not as_text:
-            logging.warn("`inflect' argument is ignored when `as_text==False'")
+            logging.warning("`inflect' argument is ignored when `as_text==False'")
         if capitalize and not as_text:
-            logging.warn("`capitalize' agrument is ignored when `as_text==False'")
+            logging.warning("`capitalize' agrument is ignored when `as_text==False'")
 
         propositions = []
 
