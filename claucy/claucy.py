@@ -136,6 +136,9 @@ class Clause:
 
         self.doc = self.subject.doc
 
+        self.type = self._get_clause_type()
+
+    def _get_clause_type(self):
         has_verb = self.verb is not None
         has_complement = self.complement is not None
         has_adverbial = len(self.adverbials) > 0
@@ -153,21 +156,21 @@ class Clause:
                 has_verb and self.verb.root.lemma_ in dictionary["complex_transitive"]
         )
 
-        self.type = "undefined"
+        clause_type = "undefined"
 
         if not has_verb:
-            self.type = "SVC"
-            return
+            clause_type = "SVC"
+            return clause_type
         if all([not has_object, has_complement]):
-            self.type = "SVC"
+            clause_type = "SVC"
         if all([not has_object, not has_complement, not has_adverbial]):
-            self.type = "SV"
+            clause_type = "SV"
         if all([not has_object, not has_complement, has_adverbial, has_non_ext_copular_verb]):
-            self.type = "SV"
+            clause_type = "SV"
         if all(
-            [not has_object, not has_complement, has_adverbial, not has_non_ext_copular_verb, has_ext_copular_verb]
+                [not has_object, not has_complement, has_adverbial, not has_non_ext_copular_verb, has_ext_copular_verb]
         ):
-            self.type = "SVA"
+            clause_type = "SVA"
         if all(
             [
                 not has_object,
@@ -178,23 +181,24 @@ class Clause:
             ]
         ):
             if conservative:
-                self.type = "SVA"
+                clause_type = "SVA"
             else:
-                self.type = "SV"
+                clause_type = "SV"
         if all([has_object, has_direct_object, has_indirect_object]):
-            self.type = "SVOO"
+            clause_type = "SVOO"
         if all([has_object, not (has_direct_object and has_indirect_object)]):
             if has_complement:
-                self.type = "SVOC"
+                clause_type = "SVOC"
             elif not (has_adverbial and has_direct_object):
-                self.type = "SVO"
+                clause_type = "SVO"
             elif complex_transitive:
-                self.type = "SVOA"
+                clause_type = "SVOA"
             else:
                 if conservative:
-                    self.type = "SVOA"
+                    clause_type = "SVOA"
                 else:
-                    self.type = "SVO"
+                    clause_type = "SVO"
+        return clause_type
 
     def __repr__(self):
         return "<{}, {}, {}, {}, {}, {}, {}>".format(
