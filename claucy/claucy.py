@@ -99,7 +99,7 @@ class Clause:
         indirect_object: t.Optional[Span] = None,
         direct_object: t.Optional[Span] = None,
         complement: t.Optional[Span] = None,
-        adverbials: t.List[Span] = [],
+        adverbials: t.List[Span] = None,
     ):
         """
         
@@ -124,6 +124,9 @@ class Clause:
         None.
 
         """
+        if adverbials is None:
+            adverbials = []
+
         self.subject = subject
         self.verb = verb
         self.indirect_object = indirect_object
