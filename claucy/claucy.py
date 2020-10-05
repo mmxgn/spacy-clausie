@@ -362,9 +362,7 @@ def _get_verb_matches(span):
 
     return verb_matcher(span)
 
-
-def extract_clauses(span):
-    clauses = []
+def _get_verb_chunks(span):
     matches = _get_verb_matches(span)
 
     # Filter matches (e.g. do not have both "has won" and "won" in verbs)
@@ -372,7 +370,14 @@ def extract_clauses(span):
     for match in [span[start:end] for _, start, end in matches]:
         if match.root not in [vp.root for vp in verb_chunks]:
             verb_chunks.append(match)
+    return verb_chunks
 
+
+def extract_clauses(span):
+    clauses = []
+    matches = _get_verb_matches(span)
+
+    verb_chunks = _get_verb_chunks(span)
     for verb in verb_chunks:
         # 1.b. find `subject` for verb
         subject = None
