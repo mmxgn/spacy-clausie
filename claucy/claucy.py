@@ -250,13 +250,11 @@ class Clause:
         comps = extract_ccs_from_token(self.complement.root)
         verbs = [self.verb] if self.verb else []
 
-
         for subj in subjects:
-            if len(verbs) == 0:
-                if len(comps) > 0:
-                    for c in comps:
-                        propositions.append((subj, "is", c))
-                    propositions.append((subj, "is") + tuple(comps))
+            if comps and not verbs:
+                for c in comps:
+                    propositions.append((subj, "is", c))
+                propositions.append((subj, "is") + tuple(comps))
             for verb in verbs:
                 prop = [subj, verb]
                 if self.type in ["SV", "SVA"]:
