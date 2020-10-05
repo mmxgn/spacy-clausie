@@ -302,6 +302,7 @@ class Clause:
 
         return propositions
 
+
 def inflect_token(token):
     if (token.pos_ == "VERB"
             and "AUX" not in [tt.pos_ for tt in token.lefts]
@@ -310,6 +311,7 @@ def inflect_token(token):
         return str(token._.inflect(True))
     else:
         return str(token)
+
 
 def _convert_clauses_to_text(propositions, inflect, capitalize):
     proposition_texts = []
@@ -349,6 +351,7 @@ def _convert_clauses_to_text(propositions, inflect, capitalize):
 
     return proposition_texts
 
+
 def _get_verb_matches(span):
     # 1. Find verb phrases in the span
     # (see mdmjsh answer here: https://stackoverflow.com/questions/47856247/extract-verb-phrases-using-spacy)
@@ -362,6 +365,7 @@ def _get_verb_matches(span):
 
     return verb_matcher(span)
 
+
 def _get_verb_chunks(span):
     matches = _get_verb_matches(span)
 
@@ -373,41 +377,43 @@ def _get_verb_chunks(span):
     return verb_chunks
 
 
+def _get_subject(verb):
+    for c in verb.root.children:
+        if c.dep_ in ["nsubj", "nsubjpass"]:
+            subject = extract_span_from_entity(c)
+            return subject
+
+    root = verb.root
+    while root.dep_ in ["conj", "cc", "advcl", "acl", "ccomp"]:
+        for c in root.children:
+            if c.dep_ in ["nsubj", "nsubjpass"]:
+                subject = extract_span_from_entity(c)
+                return subject
+
+            if c.dep_ in ["acl", "advcl"]:
+                subject = extract_span_from_entity(find_verb_subject(c))
+                return subject
+
+        # Break cycles
+        if root == verb.root.head:
+            break
+        else:
+            root = verb.root.head
+
+    for c in root.children:
+        if c.dep_ in ["nsubj", "nsubj:pass", "nsubjpass"]:
+            subject = extract_span_from_entity(c)
+            return subject
+    return None
+
+
 def extract_clauses(span):
     clauses = []
-    matches = _get_verb_matches(span)
 
     verb_chunks = _get_verb_chunks(span)
     for verb in verb_chunks:
-        # 1.b. find `subject` for verb
-        subject = None
-        for c in verb.root.children:
-            if c.dep_ in ["nsubj", "nsubjpass"]:
-                subject = extract_span_from_entity(c)
-                break
-        if not subject:
-            root = verb.root
-            while root.dep_ in ["conj", "cc", "advcl", "acl", "ccomp"]:
-                for c in root.children:
-                    if c.dep_ in ["nsubj", "nsubjpass"]:
-                        subject = extract_span_from_entity(c)
-                        break
-                    if c.dep_ in ["acl", "advcl"]:
-                        subject = extract_span_from_entity(find_verb_subject(c))
-                if subject:
-                    break
-                else:
-                    # Break cycles
-                    if root == verb.root.head:
-                        break
-                    else:
-                        root = verb.root.head
 
-            for c in root.children:
-                if c.dep_ in ["nsubj", "nsubj:pass", "nsubjpass"]:
-                    subject = extract_span_from_entity(c)
-                    break
-
+        subject = _get_subject(verb)
         if not subject:
             continue
 
