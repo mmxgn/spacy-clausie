@@ -240,7 +240,7 @@ class Clause:
         if inflect and not as_text:
             logging.warning("`inflect' argument is ignored when `as_text==False'")
         if capitalize and not as_text:
-            logging.warning("`capitalize' agrument is ignored when `as_text==False'")
+            logging.warning("`capitalize' argument is ignored when `as_text==False'")
 
         propositions = []
 
