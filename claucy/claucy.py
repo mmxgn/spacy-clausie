@@ -93,13 +93,13 @@ rarely""".split(),
 
 class Clause:
     def __init__(
-        self,
-        subject: t.Optional[Span] = None,
-        verb: t.Optional[Span] = None,
-        indirect_object: t.Optional[Span] = None,
-        direct_object: t.Optional[Span] = None,
-        complement: t.Optional[Span] = None,
-        adverbials: t.List[Span] = None,
+            self,
+            subject: t.Optional[Span] = None,
+            verb: t.Optional[Span] = None,
+            indirect_object: t.Optional[Span] = None,
+            direct_object: t.Optional[Span] = None,
+            complement: t.Optional[Span] = None,
+            adverbials: t.List[Span] = None,
     ):
         """
         
@@ -231,7 +231,8 @@ class Clause:
 
     def __repr__(self):
         return "<{}, {}, {}, {}, {}, {}, {}>".format(
-            self.type, self.subject, self.verb, self.indirect_object, self.direct_object, self.complement, self.adverbials
+            self.type, self.subject, self.verb, self.indirect_object, self.direct_object, self.complement,
+            self.adverbials
         )
 
     def to_propositions(self, as_text: bool = False, inflect: str = "VBD", capitalize: bool = False):
@@ -243,30 +244,12 @@ class Clause:
 
         propositions = []
 
-        if self.subject:
-            subjects = extract_ccs_from_token(self.subject.root)
-        else:
-            subjects = []
+        subjects = extract_ccs_from_token(self.subject.root)
+        iobjs = extract_ccs_from_token(self.indirect_object.root)
+        dobjs = extract_ccs_from_token(self.direct_object.root)
+        comps = extract_ccs_from_token(self.complement.root)
+        verbs = [self.verb] if self.verb else []
 
-        if self.verb:
-            verbs = [self.verb]
-        else:
-            verbs = []
-
-        if self.indirect_object:
-            iobjs = extract_ccs_from_token(self.indirect_object.root)
-        else:
-            iobjs = []
-
-        if self.direct_object:
-            dobjs = extract_ccs_from_token(self.direct_object.root)
-        else:
-            dobjs = []
-
-        if self.complement:
-            comps = extract_ccs_from_token(self.complement.root)
-        else:
-            comps = []
 
         for subj in subjects:
             if len(verbs) == 0:
@@ -328,12 +311,12 @@ class Clause:
                                     t._.inflect(inflect)
                                 )  # Inflect the verb according to the `inflect` flag
                                 if t.pos_ in ["VERB"]  # If t is a verb
-                                and "AUX"
-                                not in [
-                                    tt.pos_ for tt in t.lefts
-                                ]  # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
-                                and t.dep_ not in ['pcomp'] # t `deamed of becoming a dancer`
-                                and inflect  # and the `inflect' flag is set
+                                   and "AUX"
+                                   not in [
+                                       tt.pos_ for tt in t.lefts
+                                   ]  # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
+                                   and t.dep_ not in ['pcomp']  # t `deamed of becoming a dancer`
+                                   and inflect  # and the `inflect' flag is set
                                 else str(t)
                                 for t in s
                             ]
@@ -478,6 +461,8 @@ def extract_ccs_from_entity(token):
 
 
 def extract_ccs_from_token(token):
+    if token is None:
+        return []
     if token.pos_ in ["NOUN", "PROPN", "ADJ"]:
         children = sorted(
             [token]
@@ -521,7 +506,7 @@ if __name__ == "__main__":
     add_to_pipe(nlp)
 
     doc = nlp(
-        #"Chester is a banker by trade, but is dreaming of becoming a great dancer."
+        # "Chester is a banker by trade, but is dreaming of becoming a great dancer."
         " A cat , hearing that the birds in a certain aviary were ailing dressed himself up as a physician , and , taking his cane and a bag of instruments becoming his profession , went to call on them ."
     )
 
