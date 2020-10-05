@@ -245,16 +245,16 @@ class Clause:
         propositions = []
 
         subjects = extract_ccs_from_token(self.subject.root)
-        iobjs = extract_ccs_from_token(self.indirect_object.root)
-        dobjs = extract_ccs_from_token(self.direct_object.root)
-        comps = extract_ccs_from_token(self.complement.root)
+        direct_objects = extract_ccs_from_token(self.direct_object.root)
+        indirect_objects = extract_ccs_from_token(self.indirect_object.root)
+        complements = extract_ccs_from_token(self.complement.root)
         verbs = [self.verb] if self.verb else []
 
         for subj in subjects:
-            if comps and not verbs:
-                for c in comps:
+            if complements and not verbs:
+                for c in complements:
                     propositions.append((subj, "is", c))
-                propositions.append((subj, "is") + tuple(comps))
+                propositions.append((subj, "is") + tuple(complements))
             for verb in verbs:
                 prop = [subj, verb]
                 if self.type in ["SV", "SVA"]:
@@ -266,33 +266,33 @@ class Clause:
                         propositions.append(tuple(prop))
 
                 elif self.type in ["SVOO"]:
-                    for iobj in iobjs:
-                        for dobj in dobjs:
+                    for iobj in indirect_objects:
+                        for dobj in direct_objects:
                             propositions.append((subj, verb, iobj, dobj))
                 elif self.type in ["SVO"]:
-                    for obj in dobjs + iobjs:
+                    for obj in direct_objects + indirect_objects:
                         propositions.append((subj, verb, obj))
                         if len(self.adverbials) > 0:
                             for a in self.adverbials:
                                 propositions.append((subj, verb, obj, a))
                 elif self.type in ["SVOA"]:
-                    for obj in dobjs:
+                    for obj in direct_objects:
                         if len(self.adverbials) > 0:
                             for a in self.adverbials:
                                 propositions.append(tuple(prop + [obj, a]))
                             propositions.append(tuple(prop + [obj] + self.adverbials))
 
                 elif self.type in ["SVOC"]:
-                    for obj in iobjs + dobjs:
-                        if len(comps) > 0:
-                            for c in comps:
+                    for obj in indirect_objects + direct_objects:
+                        if len(complements) > 0:
+                            for c in complements:
                                 propositions.append(tuple(prop + [obj, c]))
-                            propositions.append(tuple(prop + [obj] + comps))
+                            propositions.append(tuple(prop + [obj] + complements))
                 elif self.type in ["SVC"]:
-                    if len(comps) > 0:
-                        for c in comps:
+                    if len(complements) > 0:
+                        for c in complements:
                             propositions.append(tuple(prop + [c]))
-                        propositions.append(tuple(prop + comps))
+                        propositions.append(tuple(prop + complements))
 
         # Remove doubles
         if len(propositions) > 0:
