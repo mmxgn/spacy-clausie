@@ -302,37 +302,52 @@ class Clause:
 
         return propositions
 
+def inflect_token(token):
+    if (token.pos_ == "VERB"
+            and "AUX" not in [tt.pos_ for tt in token.lefts]
+            # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
+            and token.dep_ != 'pcomp'):  # t `dreamed of becoming a dancer`
+        return str(token._.inflect(True))
+    else:
+        return str(token)
 
 def _convert_clauses_to_text(propositions, inflect, capitalize):
-    texts = [
-        " ".join(
-            [
-                " ".join(
-                    [
-                        str(
-                            t._.inflect(inflect)
-                        )  # Inflect the verb according to the `inflect` flag
-                        if t.pos_ in ["VERB"]  # If t is a verb
-                           and "AUX"
-                           not in [
-                               tt.pos_ for tt in t.lefts
-                           ]  # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
-                           and t.dep_ not in ['pcomp']  # t `deamed of becoming a dancer`
-                           and inflect  # and the `inflect' flag is set
-                        else str(t)
-                        for t in s
-                    ]
-                )
-                for s in p
-            ]
-        )
-        for p in propositions
-    ]
+    proposition_texts = []
+    for proposition in propositions:
+        span_texts = []
+        for span in proposition:
+
+            token_texts = []
+            for token in span:
+                if inflect:
+                    token_texts.append(inflect_token(token))
+                else:
+                    token_texts.append(str(token))
+
+            span_texts.append(" ".join(token_texts))
+        proposition_texts.append(" ".join(span_texts))
+
+    # proposition_texts = [
+    #     " ".join(
+    #         [
+    #             " ".join(
+    #                 [
+    #                     inflect_token(t)
+    #                     if inflect
+    #                     else str(t)
+    #                     for t in span
+    #                 ]
+    #             )
+    #             for s in proposition
+    #         ]
+    #     )
+    #     for p in propositions
+    # ]
 
     if capitalize:  # Capitalize and add a full stop.
-        texts = [text.capitalize() + "." for text in texts]
+        proposition_texts = [text.capitalize() + "." for text in proposition_texts]
 
-    return texts
+    return proposition_texts
 
 
 def extract_clauses(span):
@@ -458,11 +473,13 @@ def extract_ccs_from_entity(token):
             entities += extract_ccs_from_entity(c)
     return entities
 
+
 def extract_ccs_from_token_at_root(span):
     if span is None:
         return []
     else:
         return extract_ccs_from_token(span.root)
+
 
 def extract_ccs_from_token(token):
     if token.pos_ in ["NOUN", "PROPN", "ADJ"]:
