@@ -349,9 +349,7 @@ def _convert_clauses_to_text(propositions, inflect, capitalize):
 
     return proposition_texts
 
-
-def extract_clauses(span):
-    clauses = []
+def _get_verb_matches(span):
     # 1. Find verb phrases in the span
     # (see mdmjsh answer here: https://stackoverflow.com/questions/47856247/extract-verb-phrases-using-spacy)
 
@@ -362,7 +360,12 @@ def extract_clauses(span):
     verb_matcher.add("Auxiliary verb phrase", None, [{"POS": "AUX"}])
     verb_matcher.add("Verb phrase", None, [{"POS": "VERB"}])
 
-    matches = verb_matcher(span)
+    return verb_matcher(span)
+
+
+def extract_clauses(span):
+    clauses = []
+    matches = _get_verb_matches(span)
 
     # Filter matches (e.g. do not have both "has won" and "won" in verbs)
     verb_chunks = []
