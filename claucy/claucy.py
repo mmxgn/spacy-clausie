@@ -11,6 +11,7 @@ Clausie as a spacy library
 import spacy
 import lemminflect
 import logging
+import typing as t
 
 from spacy.tokens import Span, Doc
 from spacy.matcher import Matcher
@@ -93,12 +94,12 @@ rarely""".split(),
 class Clause:
     def __init__(
         self,
-        subject: Span = None,
-        verb: Span = None,
-        indirect_object: Span = None,
-        direct_object: Span = None,
-        complement: Span = None,
-        adverbials: list = [],
+        subject: t.Optional[Span] = None,
+        verb: t.Optional[Span] = None,
+        indirect_object: t.Optional[Span] = None,
+        direct_object: t.Optional[Span] = None,
+        complement: t.Optional[Span] = None,
+        adverbials: t.List[Span] = [],
     ):
         """
         
@@ -311,7 +312,7 @@ class Clause:
                 # Capitalize and add a full stop.
                 return [text.capitalize() + "." for text in texts]
             else:
-                return texts       
+                return texts
 
         return propositions
 
