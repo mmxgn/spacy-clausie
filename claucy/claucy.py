@@ -93,29 +93,29 @@ rarely""".split(),
 class Clause:
     def __init__(
         self,
-        S: Span = None,
-        V: Span = None,
-        I: Span = None,
-        O: Span = None,
-        C: Span = None,
-        A: list = [],
+        subject: Span = None,
+        verb: Span = None,
+        indirect_object: Span = None,
+        direct_object: Span = None,
+        complement: Span = None,
+        adverbials: list = [],
     ):
         """
         
 
         Parameters
         ----------
-        S : Span
+        subject : Span
             Subject.
-        V : Span
+        verb : Span
             Verb.
-        I : Span, optional
+        indirect_object : Span, optional
             Indirect object, The default is None.
-        O : Span, optional
+        direct_object : Span, optional
             Direct object. The default is None.
-        C : Span, optional
+        complement : Span, optional
             Complement. The default is None.
-        A : list, optional
+        adverbials : list, optional
             List of adverbials. The default is [].
 
         Returns
@@ -123,35 +123,35 @@ class Clause:
         None.
 
         """
-        self.S = S
-        self.V = V
-        self.I = I
-        self.O = O
-        self.C = C
-        self.A = A
+        self.subject = subject
+        self.verb = verb
+        self.indirect_object = indirect_object
+        self.direct_object = direct_object
+        self.complement = complement
+        self.adverbials = adverbials
 
-        self.doc = self.S.doc
+        self.doc = self.subject.doc
 
-        complementP = self.C is not None
-        adverbialP = len(self.A) > 0
+        complementP = self.complement is not None
+        adverbialP = len(self.adverbials) > 0
         ext_copular = (
-            self.V is not None and self.V.root.lemma_ in dictionary["ext_copular"]
+                self.verb is not None and self.verb.root.lemma_ in dictionary["ext_copular"]
         )
         non_ext_copular = (
-            self.V is not None and self.V.root.lemma_ in dictionary["non_ext_copular"]
+                self.verb is not None and self.verb.root.lemma_ in dictionary["non_ext_copular"]
         )
         conservative = MOD_CONSERVATIVE
-        direct_object = self.O is not None
-        indirect_object = self.I is not None
+        direct_object = self.direct_object is not None
+        indirect_object = self.indirect_object is not None
         objectP = direct_object or indirect_object
         complex_transitive = (
-            self.V is not None
-            and self.V.root.lemma_ in dictionary["complex_transitive"]
+                self.verb is not None
+                and self.verb.root.lemma_ in dictionary["complex_transitive"]
         )
 
         self.type = "undefined"
 
-        if self.V is None:
+        if self.verb is None:
             self.type = "SVC"
             return
         if all([not objectP, complementP]):
@@ -194,7 +194,7 @@ class Clause:
 
     def __repr__(self):
         return "<{}, {}, {}, {}, {}, {}, {}>".format(
-            self.type, self.S, self.V, self.I, self.O, self.C, self.A
+            self.type, self.subject, self.verb, self.indirect_object, self.direct_object, self.complement, self.adverbials
         )
 
     def to_propositions(self, as_text: bool = False, inflect: str = "VBD", capitalize: bool = False):
@@ -206,28 +206,28 @@ class Clause:
 
         propositions = []
 
-        if self.S:
-            subjects = extract_ccs_from_token(self.S.root)
+        if self.subject:
+            subjects = extract_ccs_from_token(self.subject.root)
         else:
             subjects = []
 
-        if self.V:
-            verbs = [self.V]
+        if self.verb:
+            verbs = [self.verb]
         else:
             verbs = []
 
-        if self.I:
-            iobjs = extract_ccs_from_token(self.I.root)
+        if self.indirect_object:
+            iobjs = extract_ccs_from_token(self.indirect_object.root)
         else:
             iobjs = []
 
-        if self.O:
-            dobjs = extract_ccs_from_token(self.O.root)
+        if self.direct_object:
+            dobjs = extract_ccs_from_token(self.direct_object.root)
         else:
             dobjs = []
 
-        if self.C:
-            comps = extract_ccs_from_token(self.C.root)
+        if self.complement:
+            comps = extract_ccs_from_token(self.complement.root)
         else:
             comps = []
 
@@ -240,10 +240,10 @@ class Clause:
             for verb in verbs:
                 prop = [subj, verb]
                 if self.type in ["SV", "SVA"]:
-                    if len(self.A) > 0:
-                        for a in self.A:
+                    if len(self.adverbials) > 0:
+                        for a in self.adverbials:
                             propositions.append(tuple(prop + [a]))
-                        propositions.append(tuple(prop + self.A))
+                        propositions.append(tuple(prop + self.adverbials))
                     else:
                         propositions.append(tuple(prop))
 
@@ -254,15 +254,15 @@ class Clause:
                 elif self.type in ["SVO"]:
                     for obj in dobjs + iobjs:
                         propositions.append((subj, verb, obj))
-                        if len(self.A) > 0:
-                            for a in self.A:
+                        if len(self.adverbials) > 0:
+                            for a in self.adverbials:
                                 propositions.append((subj, verb, obj, a))
                 elif self.type in ["SVOA"]:
                     for obj in dobjs:
-                        if len(self.A) > 0:
-                            for a in self.A:
+                        if len(self.adverbials) > 0:
+                            for a in self.adverbials:
                                 propositions.append(tuple(prop + [obj, a]))
-                            propositions.append(tuple(prop + [obj] + self.A))
+                            propositions.append(tuple(prop + [obj] + self.adverbials))
 
                 elif self.type in ["SVOC"]:
                     for obj in iobjs + dobjs:
