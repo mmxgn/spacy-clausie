@@ -255,6 +255,7 @@ class Clause:
                 for c in complements:
                     propositions.append((subj, "is", c))
                 propositions.append((subj, "is") + tuple(complements))
+
             for verb in verbs:
                 prop = [subj, verb]
                 if self.type in ["SV", "SVA"]:
@@ -265,30 +266,30 @@ class Clause:
                     else:
                         propositions.append(tuple(prop))
 
-                elif self.type in ["SVOO"]:
+                elif self.type == "SVOO":
                     for iobj in indirect_objects:
                         for dobj in direct_objects:
                             propositions.append((subj, verb, iobj, dobj))
-                elif self.type in ["SVO"]:
+                elif self.type == "SVO":
                     for obj in direct_objects + indirect_objects:
                         propositions.append((subj, verb, obj))
                         if len(self.adverbials) > 0:
                             for a in self.adverbials:
                                 propositions.append((subj, verb, obj, a))
-                elif self.type in ["SVOA"]:
+                elif self.type == "SVOA":
                     for obj in direct_objects:
                         if len(self.adverbials) > 0:
                             for a in self.adverbials:
                                 propositions.append(tuple(prop + [obj, a]))
                             propositions.append(tuple(prop + [obj] + self.adverbials))
 
-                elif self.type in ["SVOC"]:
+                elif self.type == "SVOC":
                     for obj in indirect_objects + direct_objects:
                         if len(complements) > 0:
                             for c in complements:
                                 propositions.append(tuple(prop + [obj, c]))
                             propositions.append(tuple(prop + [obj] + complements))
-                elif self.type in ["SVC"]:
+                elif self.type == "SVC":
                     if len(complements) > 0:
                         for c in complements:
                             propositions.append(tuple(prop + [c]))
