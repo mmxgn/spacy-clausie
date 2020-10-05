@@ -157,47 +157,76 @@ class Clause:
         )
 
         clause_type = "undefined"
+        # # Original
+        # if not has_verb:
+        #     clause_type = "SVC"
+        #     return clause_type
+        # if all([not has_object, has_complement]):
+        #     clause_type = "SVC"
+        #
+        # if all([not has_object, not has_complement, not has_adverbial]):
+        #     clause_type = "SV"
+        # if all([not has_object, not has_complement, has_adverbial, has_non_ext_copular_verb]):
+        #     clause_type = "SV"
+        #
+        # if all(
+        #         [not has_object, not has_complement, has_adverbial, not has_non_ext_copular_verb, has_ext_copular_verb]
+        # ):
+        #     clause_type = "SVA"
+        # if all(
+        #     [
+        #         not has_object,
+        #         not has_complement,
+        #         has_adverbial,
+        #         not has_non_ext_copular_verb,
+        #         not has_ext_copular_verb,
+        #     ]
+        # ):
+        #     if conservative:
+        #         clause_type = "SVA"
+        #     else:
+        #         clause_type = "SV"
+        #
+        # if all([has_object, has_direct_object, has_indirect_object]):
+        #     clause_type = "SVOO"
+        # if all([has_object, not (has_direct_object and has_indirect_object)]):
+        #     if has_complement:
+        #         clause_type = "SVOC"
+        #     elif not (has_adverbial and has_direct_object):
+        #         clause_type = "SVO"
+        #     elif complex_transitive:
+        #         clause_type = "SVOA"
+        #     else:
+        #         if conservative:
+        #             clause_type = "SVOA"
+        #         else:
+        #             clause_type = "SVO"
 
         if not has_verb:
             clause_type = "SVC"
             return clause_type
-        if all([not has_object, has_complement]):
-            clause_type = "SVC"
-        if all([not has_object, not has_complement, not has_adverbial]):
-            clause_type = "SV"
-        if all([not has_object, not has_complement, has_adverbial, has_non_ext_copular_verb]):
-            clause_type = "SV"
-        if all(
-                [not has_object, not has_complement, has_adverbial, not has_non_ext_copular_verb, has_ext_copular_verb]
-        ):
-            clause_type = "SVA"
-        if all(
-            [
-                not has_object,
-                not has_complement,
-                has_adverbial,
-                not has_non_ext_copular_verb,
-                not has_ext_copular_verb,
-            ]
-        ):
-            if conservative:
+
+        if has_object:
+            if has_direct_object and has_indirect_object:
+                clause_type = "SVOO"
+            elif has_complement:
+                clause_type = "SVOC"
+            elif not has_adverbial or not has_direct_object:
+                clause_type = "SVO"
+            elif complex_transitive or conservative:
+                clause_type = "SVOA"
+            else:
+                clause_type = "SVO"
+        else:
+            if has_complement:
+                clause_type = "SVC"
+            elif not has_adverbial or has_non_ext_copular_verb:
+                clause_type = "SV"
+            elif has_ext_copular_verb or conservative:
                 clause_type = "SVA"
             else:
                 clause_type = "SV"
-        if all([has_object, has_direct_object, has_indirect_object]):
-            clause_type = "SVOO"
-        if all([has_object, not (has_direct_object and has_indirect_object)]):
-            if has_complement:
-                clause_type = "SVOC"
-            elif not (has_adverbial and has_direct_object):
-                clause_type = "SVO"
-            elif complex_transitive:
-                clause_type = "SVOA"
-            else:
-                if conservative:
-                    clause_type = "SVOA"
-                else:
-                    clause_type = "SVO"
+
         return clause_type
 
     def __repr__(self):
