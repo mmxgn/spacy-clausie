@@ -297,38 +297,42 @@ class Clause:
         # Remove doubles
         propositions = list(set(propositions))
 
-        # Convert to text if `as_text' is set.
         if as_text:
-            texts = [
-                " ".join(
-                    [
-                        " ".join(
-                            [
-                                str(
-                                    t._.inflect(inflect)
-                                )  # Inflect the verb according to the `inflect` flag
-                                if t.pos_ in ["VERB"]  # If t is a verb
-                                   and "AUX"
-                                   not in [
-                                       tt.pos_ for tt in t.lefts
-                                   ]  # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
-                                   and t.dep_ not in ['pcomp']  # t `deamed of becoming a dancer`
-                                   and inflect  # and the `inflect' flag is set
-                                else str(t)
-                                for t in s
-                            ]
-                        )
-                        for s in p
-                    ]
-                )
-                for p in propositions
-            ]
-
-            if capitalize:  # Capitalize and add a full stop.
-                texts = [text.capitalize() + "." for text in texts]
-            return texts
+            return _convert_clauses_to_text(propositions, inflect=inflect, capitalize=capitalize)
 
         return propositions
+
+
+def _convert_clauses_to_text(propositions, inflect, capitalize):
+    texts = [
+        " ".join(
+            [
+                " ".join(
+                    [
+                        str(
+                            t._.inflect(inflect)
+                        )  # Inflect the verb according to the `inflect` flag
+                        if t.pos_ in ["VERB"]  # If t is a verb
+                           and "AUX"
+                           not in [
+                               tt.pos_ for tt in t.lefts
+                           ]  # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
+                           and t.dep_ not in ['pcomp']  # t `deamed of becoming a dancer`
+                           and inflect  # and the `inflect' flag is set
+                        else str(t)
+                        for t in s
+                    ]
+                )
+                for s in p
+            ]
+        )
+        for p in propositions
+    ]
+
+    if capitalize:  # Capitalize and add a full stop.
+        texts = [text.capitalize() + "." for text in texts]
+
+    return texts
 
 
 def extract_clauses(span):
