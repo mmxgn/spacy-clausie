@@ -244,10 +244,10 @@ class Clause:
 
         propositions = []
 
-        subjects = extract_ccs_from_token(self.subject.root)
-        direct_objects = extract_ccs_from_token(self.direct_object.root)
-        indirect_objects = extract_ccs_from_token(self.indirect_object.root)
-        complements = extract_ccs_from_token(self.complement.root)
+        subjects = extract_ccs_from_token_at_root(self.subject)
+        direct_objects = extract_ccs_from_token_at_root(self.direct_object)
+        indirect_objects = extract_ccs_from_token_at_root(self.indirect_object)
+        complements = extract_ccs_from_token_at_root(self.complement)
         verbs = [self.verb] if self.verb else []
 
         for subj in subjects:
@@ -458,10 +458,13 @@ def extract_ccs_from_entity(token):
             entities += extract_ccs_from_entity(c)
     return entities
 
+def extract_ccs_from_token_at_root(span):
+    if span is None:
+        return []
+    else:
+        return extract_ccs_from_token(span.root)
 
 def extract_ccs_from_token(token):
-    if token is None:
-        return []
     if token.pos_ in ["NOUN", "PROPN", "ADJ"]:
         children = sorted(
             [token]
