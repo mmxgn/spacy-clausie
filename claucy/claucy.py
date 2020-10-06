@@ -423,7 +423,7 @@ def extract_clauses(span):
         for c in subject.root.children:
             if c.dep_ in ["appos"]:
                 comp = extract_span_from_entity(c)
-                clause = Clause(subject, None, [], [], comp, [])
+                clause = Clause(subject=subject, complement=comp)
                 clauses.append(clause)
 
         # 1.c. find indirect object
@@ -450,7 +450,8 @@ def extract_clauses(span):
             if c.dep_ in ["prep", "advmod", "agent"]:
                 adv.append(extract_span_from_entity(c))
 
-        clause = Clause(subject, verb, iob, dob, comp, adv)
+        clause = Clause(
+            subject=subject, verb=verb, indirect_object=iob, direct_object=dob, complement=comp, adverbials=adv)
         clauses.append(clause)
     return clauses
 
