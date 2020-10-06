@@ -1,13 +1,22 @@
 # ClauCy
 Implementation of the ClausIE information extraction system for python+spacy. 
 
-**Disclaimer**: It is **not** meant to be a 1-1 implementation of the algorithm (which is impossible since SpaCy is used instead of Stanford Dependencies like in the paper) but a clause extraction and text simplification library I have for personal use. Therefore I have done some modifications. First of all, I did some exploration on how to better separate embedded clauses when using SpaCy dependencies. Also, when generating propositions in text, I provide the ability to *inflect* the verbs, so that they are in a somewhat useful text form. This allows me to, for example, process complex sentences such as this:
+**Disclaimer**: This is **not** meant to be a 1-1 implementation of the algorithm 
+(which is impossible since SpaCy is used instead of Stanford Dependencies like in the paper) 
+but a clause extraction and text simplification library I have for personal use. 
 
+I have made some modifications. 
+- I did some exploration on how to better separate embedded clauses when using SpaCy dependencies. 
+- I provide the ability to *inflect* the verbs, so that they are in a somewhat useful text form 
+when generating propositions in text. 
+
+This allows the processing of complex sentences such as this:
 ```
-A cat, hearing that the birds in a certain aviary were ailing dressed himself up as a physician, and, taking his cane and a bag of instruments becoming his profession, went to call on them.
+A cat, hearing that the birds in a certain aviary were ailing dressed himself up as a physician, 
+and, taking his cane and a bag of instruments becoming his profession, went to call on them.
 ```
 
-and get propositions such as these:
+to produce propositions such as these:
 
 ```
 ['The birds were ailing.']
