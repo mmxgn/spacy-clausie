@@ -407,6 +407,13 @@ def _get_subject(verb):
     return None
 
 
+def _find_matching_child(root, allowed_types):
+    for c in root.children:
+        if c.dep_ in allowed_types:
+            return extract_span_from_entity(c)
+    return None
+
+
 def extract_clauses(span):
     clauses = []
 
@@ -426,29 +433,10 @@ def extract_clauses(span):
                 clause = Clause(subject=subject, complement=comp)
                 clauses.append(clause)
 
-        # 1.c. find indirect object
-        iob = None
-        for c in verb.root.children:
-            if c.dep_ == "dative":
-                iob = extract_span_from_entity(c)
-
-        # 1.d. find direct object
-        dob = None
-        for c in verb.root.children:
-            if c.dep_ == "dobj":
-                dob = extract_span_from_entity(c)
-
-        # 1.e. find complements
-        comp = None
-        for c in verb.root.children:
-            if c.dep_ in ["ccomp", "acomp", "xcomp", "attr"]:
-                comp = extract_span_from_entity(c)
-
-        # 1.f. find adverbials
-        adv = []
-        for c in verb.root.children:
-            if c.dep_ in ["prep", "advmod", "agent"]:
-                adv.append(extract_span_from_entity(c))
+        iob = _find_matching_child(verb.root, ["dative"])
+        dob = _find_matching_child(verb.root, ["dobj"])
+        comp = _find_matching_child(verb.root, ["ccomp", "acomp", "xcomp", "attr"])
+        adv = [extract_span_from_entity(c) for c in verb.root.children if c.dep_ in ("prep", "advmod", "agent")]
 
         clause = Clause(
             subject=subject, verb=verb, indirect_object=iob, direct_object=dob, complement=comp, adverbials=adv)
