@@ -429,17 +429,24 @@ def extract_clauses(span):
         # <AE, is, a scientist>
         for c in subject.root.children:
             if c.dep_ == "appos":
-                comp = extract_span_from_entity(c)
-                clause = Clause(subject=subject, complement=comp)
+                complement = extract_span_from_entity(c)
+                clause = Clause(subject=subject, complement=complement)
                 clauses.append(clause)
 
-        iob = _find_matching_child(verb.root, ["dative"])
-        dob = _find_matching_child(verb.root, ["dobj"])
-        comp = _find_matching_child(verb.root, ["ccomp", "acomp", "xcomp", "attr"])
-        adv = [extract_span_from_entity(c) for c in verb.root.children if c.dep_ in ("prep", "advmod", "agent")]
+        indirect_object = _find_matching_child(verb.root, ["dative"])
+        direct_object = _find_matching_child(verb.root, ["dobj"])
+        complement = _find_matching_child(verb.root, ["ccomp", "acomp", "xcomp", "attr"])
+        adverbials = [extract_span_from_entity(c)
+                      for c in verb.root.children
+                      if c.dep_ in ("prep", "advmod", "agent")]
 
         clause = Clause(
-            subject=subject, verb=verb, indirect_object=iob, direct_object=dob, complement=comp, adverbials=adv)
+            subject=subject,
+            verb=verb,
+            indirect_object=indirect_object,
+            direct_object=direct_object,
+            complement=complement,
+            adverbials=adverbials)
         clauses.append(clause)
     return clauses
 
