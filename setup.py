@@ -15,7 +15,7 @@ setup(
     version="0.0.1.990",
     packages=find_packages(),
     # scripts=['claucy/__init__.py', 'clausiepy/__init__.py'],
-    install_requires=["spacy>=2.3.0"],
+    install_requires=["spacy>=2.3.0", "lemminflect"],
     test_suite="tests.test_suite",
     author="Emmanouil Theofanis Chourdakis",
     author_email="etchourdakis@gmail.com",
