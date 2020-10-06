@@ -303,12 +303,13 @@ class Clause:
         return propositions
 
 
-def inflect_token(token):
-    if (token.pos_ == "VERB"
+def inflect_token(token, inflect):
+    if (inflect
+            and token.pos_ == "VERB"
             and "AUX" not in [tt.pos_ for tt in token.lefts]
             # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
             and token.dep_ != 'pcomp'):  # t `dreamed of becoming a dancer`
-        return str(token._.inflect(True))
+        return str(token._.inflect(inflect))
     else:
         return str(token)
 
@@ -321,10 +322,7 @@ def _convert_clauses_to_text(propositions, inflect, capitalize):
 
             token_texts = []
             for token in span:
-                if inflect:
-                    token_texts.append(inflect_token(token))
-                else:
-                    token_texts.append(str(token))
+                token_texts.append(inflect_token(token, inflect))
 
             span_texts.append(" ".join(token_texts))
         proposition_texts.append(" ".join(span_texts))
