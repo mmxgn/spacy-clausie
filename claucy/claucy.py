@@ -421,7 +421,7 @@ def extract_clauses(span):
         # If so, add a new clause of the form:
         # <AE, is, a scientist>
         for c in subject.root.children:
-            if c.dep_ in ["appos"]:
+            if c.dep_ == "appos":
                 comp = extract_span_from_entity(c)
                 clause = Clause(subject=subject, complement=comp)
                 clauses.append(clause)
@@ -429,13 +429,13 @@ def extract_clauses(span):
         # 1.c. find indirect object
         iob = None
         for c in verb.root.children:
-            if c.dep_ in ["dative"]:
+            if c.dep_ == "dative":
                 iob = extract_span_from_entity(c)
 
         # 1.d. find direct object
         dob = None
         for c in verb.root.children:
-            if c.dep_ in ["dobj"]:
+            if c.dep_ == "dobj":
                 dob = extract_span_from_entity(c)
 
         # 1.e. find complements
@@ -511,7 +511,7 @@ def extract_ccs_from_token(token):
     else:
         entities = [Span(token.doc, start=token.i, end=token.i + 1)]
     for c in token.children:
-        if c.dep_ in ["conj"]:
+        if c.dep_ == "conj":
             entities += extract_ccs_from_token(c)
     return entities
 
