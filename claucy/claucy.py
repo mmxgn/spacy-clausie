@@ -382,7 +382,7 @@ def _get_subject(verb):
             return subject
 
     root = verb.root
-    while root.dep_ in ["conj", "cc", "advcl", "acl", "ccomp"]:
+    while root.dep_ in ["conj", "cc", "advcl", "acl", "ccomp", "ROOT"]:
         for c in root.children:
             if c.dep_ in ["nsubj", "nsubjpass"]:
                 subject = extract_span_from_entity(c)
@@ -516,7 +516,8 @@ def find_verb_subject(v):
     """
     if v.dep_ in ["nsubj", "nsubjpass", "nsubj:pass"]:
         return v
-    elif v.dep_ in ["advcl", "acl"]:
+    # guard against infinite recursion on root token
+    elif v.dep_ in ["advcl", "acl"] and v.head.dep_ != "ROOT":
         return find_verb_subject(v.head)
 
     for c in v.children:
