@@ -389,8 +389,8 @@ def _get_subject(verb):
                 return subject
 
             if c.dep_ in ["acl", "advcl"]:
-                subject = extract_span_from_entity(find_verb_subject(c))
-                return subject
+                subject = find_verb_subject(c)
+                return extract_span_from_entity(subject) if subject else None
 
         # Break cycles
         if root == verb.root.head:
@@ -523,7 +523,7 @@ def find_verb_subject(v):
     for c in v.children:
         if c.dep_ in ["nsubj", "nsubjpass", "nsubj:pass"]:
             return c
-        elif c.dep_ in ["advcl", "acl"]:
+        elif c.dep_ in ["advcl", "acl"] and v.head.dep_ != "ROOT":
             return find_verb_subject(v.head)
 
 
