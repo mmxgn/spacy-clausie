@@ -139,4 +139,4 @@ The variable `Predicate` comes directly from the verb and `Arg1` and `Arg2` are 
 
 ## License
 
-This code is licensed under the [Creative Commons Attribution-ShareAlike 3.0 Unported License](https://creativecommons.org/licenses/by-sa/3.0/).
+This code is licensed under the [General Public License Version 3.0](GPL3)(https://www.gnu.org/licenses/gpl-3.0.txt). 
