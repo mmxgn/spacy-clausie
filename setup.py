@@ -20,7 +20,7 @@ setup(
     author="Emmanouil Theofanis Chourdakis",
     author_email="etchourdakis@gmail.com",
     description="A reimplementation of ClausIE Information Extraction System in python",
-    url="https://github.com/mmxgn/clausiepy",
-    keywords="openie clausie information extraction",
+    url="https://github.com/mmxgn/spacy-clausie",
+    keywords="openie clausie information extraction spacy",
     include_package_data=True,
 )
