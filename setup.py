@@ -6,21 +6,21 @@ Created on Tue Sep 25 18:21:51 2018
 @author: Emmanouil Theofanis Chourdakis
 """
 
-
-
 from setuptools import setup, find_packages
+import unittest
+
+
 setup(
-    name="clausiepy",
-    version="0.0.1",
+    name="claucy",
+    version="0.0.1.991",
     packages=find_packages(),
-    #scripts=['clausiepy/clausiepy.py', 'clausiepy/__init__.py'],
-    install_requires=['spacy>=2.0.0'],
-    
+    # scripts=['claucy/__init__.py', 'clausiepy/__init__.py'],
+    install_requires=["spacy>=2.3.0", "lemminflect>=0.2.1"],
+    test_suite="tests.test_suite",
     author="Emmanouil Theofanis Chourdakis",
-    author_email="e.t.chourdakis@qmul.ac.uk", 
+    author_email="etchourdakis@gmail.com",
     description="A reimplementation of ClausIE Information Extraction System in python",
-    url="https://github.com/mmxgn/clausiepy",
-    keywords="openie clausie information extraction",
+    url="https://github.com/mmxgn/spacy-clausie",
+    keywords="openie clausie information extraction spacy",
     include_package_data=True,
-    
 )
