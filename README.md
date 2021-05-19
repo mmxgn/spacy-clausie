@@ -57,7 +57,7 @@ pages={9}
 ```
 
 ## Requirements
-- `spacy>=2.3.0`
+- `spacy>=3.0.0`
 - `lemminflect>=0.2.1` (only if using the `inflect` argument in `to_propositions(as_text=True)`)
 - Python 3
 
@@ -70,6 +70,12 @@ $ python setup.py install [--user]
 
 # Optionally
 $ python setup.py test
+```
+
+Or with pip:
+
+```sh
+python -m pip install git+https://github.com/mmxgn/spacy-clausie.git
 ```
 
 ## Usage

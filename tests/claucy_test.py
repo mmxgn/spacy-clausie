@@ -76,7 +76,7 @@ class Test_ClauCy(unittest.TestCase):
     def test_parse(self):
         import spacy
 
-        nlp = spacy.load("en")
+        nlp = spacy.load("en_core_web_sm")
         claucy.add_to_pipe(nlp)
         for doc in nlp.pipe([sent[0] for sent in sentences]):
             pass
@@ -84,7 +84,7 @@ class Test_ClauCy(unittest.TestCase):
     def test_clause_types(self):
         import spacy
 
-        nlp = spacy.load("en")
+        nlp = spacy.load("en_core_web_sm")
         claucy.add_to_pipe(nlp)
         for sent in sentences:
             doc = nlp(sent[0])
@@ -97,7 +97,7 @@ class Test_ClauCy(unittest.TestCase):
     def test_extract_propositions(self):
         import spacy
 
-        nlp = spacy.load("en")
+        nlp = spacy.load("en_core_web_sm")
         claucy.add_to_pipe(nlp)
         for sent in sentences:
             doc = nlp(sent[0])
@@ -107,7 +107,7 @@ class Test_ClauCy(unittest.TestCase):
     def test_derived_clauses(self):
         import spacy
 
-        nlp = spacy.load("en")
+        nlp = spacy.load("en_core_web_sm")
         claucy.add_to_pipe(nlp)
         for sent in sentences:
             doc = nlp(sent[0])
