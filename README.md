@@ -78,6 +78,12 @@ Or with pip:
 python -m pip install git+https://github.com/mmxgn/spacy-clausie.git
 ```
 
+Download the pipeline if necessary:
+
+```sh
+python -m spacy download en_core_web_lg
+```
+
 ## Usage
 
 ### Python
@@ -86,7 +92,7 @@ python -m pip install git+https://github.com/mmxgn/spacy-clausie.git
 $ ipython
 In [1]: import spacy                                                                                                                                               
 In [2]: import claucy                                                                                                                                               
-In [3]: nlp = spacy.load("en")
+In [3]: nlp = spacy.load("en_core_web_lg")
 In [4]: claucy.add_to_pipe(nlp)                                                                                                                                     
 In [5]: doc = nlp("AE died in Princeton in 1955.")                                                                                                                 
 In [6]: doc._.clauses                                                                                                                                               

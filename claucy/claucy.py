@@ -529,7 +529,7 @@ def find_verb_subject(v):
 if __name__ == "__main__":
     import spacy
 
-    nlp = spacy.load("en_core_web_sm")
+    nlp = spacy.load("en_core_web_lg")
     add_to_pipe(nlp)
 
     doc = nlp(
