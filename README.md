@@ -33,8 +33,6 @@ to produce propositions such as these:
 - Reimplemented it as a `spacy` pipeline component (clauses under `doc._.clauses`)
 - Added tests from the paper
 
-**THIS IS DEPRECATED, will soon be replaced by [dev-clausie-reimplementation](https://github.com/mmxgn/spacy-clausie/tree/dev-clausie-reimplementation)**
-
 ## Credits
 While this is a re-implementation by me, original research work (and also the dictionaries) is attributed to Luciano Del Corro
 and Rainer Gemulla. If you use it in your code please note that there are slight modifications in the code in order to make it work with the spacy dependency parser, and also cite:
