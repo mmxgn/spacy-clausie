@@ -57,7 +57,7 @@ pages={9}
 ```
 
 ## Requirements
-- `spacy>=2.3.0`
+- `spacy>=2.3.0,<3.0.0` (it does not work with spacy version 3 and above)
 - `lemminflect>=0.2.1` (only if using the `inflect` argument in `to_propositions(as_text=True)`)
 - Python 3
 
