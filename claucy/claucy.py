@@ -93,16 +93,16 @@ rarely""".split(),
 
 class Clause:
     def __init__(
-            self,
-            subject: typing.Optional[Span] = None,
-            verb: typing.Optional[Span] = None,
-            indirect_object: typing.Optional[Span] = None,
-            direct_object: typing.Optional[Span] = None,
-            complement: typing.Optional[Span] = None,
-            adverbials: typing.List[Span] = None,
+        self,
+        subject: typing.Optional[Span] = None,
+        verb: typing.Optional[Span] = None,
+        indirect_object: typing.Optional[Span] = None,
+        direct_object: typing.Optional[Span] = None,
+        complement: typing.Optional[Span] = None,
+        adverbials: typing.List[Span] = None,
     ):
         """
-        
+
 
         Parameters
         ----------
@@ -143,64 +143,20 @@ class Clause:
         has_complement = self.complement is not None
         has_adverbial = len(self.adverbials) > 0
         has_ext_copular_verb = (
-                has_verb and self.verb.root.lemma_ in dictionary["ext_copular"]
+            has_verb and self.verb.root.lemma_ in dictionary["ext_copular"]
         )
         has_non_ext_copular_verb = (
-                has_verb and self.verb.root.lemma_ in dictionary["non_ext_copular"]
+            has_verb and self.verb.root.lemma_ in dictionary["non_ext_copular"]
         )
         conservative = MOD_CONSERVATIVE
         has_direct_object = self.direct_object is not None
         has_indirect_object = self.indirect_object is not None
         has_object = has_direct_object or has_indirect_object
         complex_transitive = (
-                has_verb and self.verb.root.lemma_ in dictionary["complex_transitive"]
+            has_verb and self.verb.root.lemma_ in dictionary["complex_transitive"]
         )
 
         clause_type = "undefined"
-        # # Original
-        # if not has_verb:
-        #     clause_type = "SVC"
-        #     return clause_type
-        # if all([not has_object, has_complement]):
-        #     clause_type = "SVC"
-        #
-        # if all([not has_object, not has_complement, not has_adverbial]):
-        #     clause_type = "SV"
-        # if all([not has_object, not has_complement, has_adverbial, has_non_ext_copular_verb]):
-        #     clause_type = "SV"
-        #
-        # if all(
-        #         [not has_object, not has_complement, has_adverbial, not has_non_ext_copular_verb, has_ext_copular_verb]
-        # ):
-        #     clause_type = "SVA"
-        # if all(
-        #     [
-        #         not has_object,
-        #         not has_complement,
-        #         has_adverbial,
-        #         not has_non_ext_copular_verb,
-        #         not has_ext_copular_verb,
-        #     ]
-        # ):
-        #     if conservative:
-        #         clause_type = "SVA"
-        #     else:
-        #         clause_type = "SV"
-        #
-        # if all([has_object, has_direct_object, has_indirect_object]):
-        #     clause_type = "SVOO"
-        # if all([has_object, not (has_direct_object and has_indirect_object)]):
-        #     if has_complement:
-        #         clause_type = "SVOC"
-        #     elif not (has_adverbial and has_direct_object):
-        #         clause_type = "SVO"
-        #     elif complex_transitive:
-        #         clause_type = "SVOA"
-        #     else:
-        #         if conservative:
-        #             clause_type = "SVOA"
-        #         else:
-        #             clause_type = "SVO"
 
         if not has_verb:
             clause_type = "SVC"
@@ -231,16 +187,23 @@ class Clause:
 
     def __repr__(self):
         return "<{}, {}, {}, {}, {}, {}, {}>".format(
-            self.type, self.subject, self.verb, self.indirect_object, self.direct_object, self.complement,
-            self.adverbials
+            self.type,
+            self.subject,
+            self.verb,
+            self.indirect_object,
+            self.direct_object,
+            self.complement,
+            self.adverbials,
         )
 
-    def to_propositions(self, as_text: bool = False, inflect: str = "VBD", capitalize: bool = False):
+    def to_propositions(
+        self, as_text: bool = False, inflect: str or None = "VBD", capitalize: bool = False
+    ):
 
         if inflect and not as_text:
-            logging.warning("`inflect' argument is ignored when `as_text==False'")
+            logging.warning("`inflect' argument is ignored when `as_text==False'. To suppress this warning call `to_propositions' with the argument `inflect=None'")
         if capitalize and not as_text:
-            logging.warning("`capitalize' argument is ignored when `as_text==False'")
+            logging.warning("`capitalize' argument is ignored when `as_text==False'. To suppress this warning call `to_propositions' with the argument `capitalize=False")
 
         propositions = []
 
@@ -298,17 +261,21 @@ class Clause:
         propositions = list(set(propositions))
 
         if as_text:
-            return _convert_clauses_to_text(propositions, inflect=inflect, capitalize=capitalize)
+            return _convert_clauses_to_text(
+                propositions, inflect=inflect, capitalize=capitalize
+            )
 
         return propositions
 
 
 def inflect_token(token, inflect):
-    if (inflect
-            and token.pos_ == "VERB"
-            and "AUX" not in [tt.pos_ for tt in token.lefts]
-            # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
-            and token.dep_ != 'pcomp'):  # t `dreamed of becoming a dancer`
+    if (
+        inflect
+        and token.pos_ == "VERB"
+        and "AUX" not in [tt.pos_ for tt in token.lefts]
+        # t is not preceded by an auxiliary verb (e.g. `the birds were ailing`)
+        and token.dep_ != "pcomp"
+    ):  # t `dreamed of becoming a dancer`
         return str(token._.inflect(inflect))
     else:
         return str(token)
@@ -326,23 +293,6 @@ def _convert_clauses_to_text(propositions, inflect, capitalize):
 
             span_texts.append(" ".join(token_texts))
         proposition_texts.append(" ".join(span_texts))
-
-    # proposition_texts = [
-    #     " ".join(
-    #         [
-    #             " ".join(
-    #                 [
-    #                     inflect_token(t)
-    #                     if inflect
-    #                     else str(t)
-    #                     for t in span
-    #                 ]
-    #             )
-    #             for s in proposition
-    #         ]
-    #     )
-    #     for p in propositions
-    # ]
 
     if capitalize:  # Capitalize and add a full stop.
         proposition_texts = [text.capitalize() + "." for text in proposition_texts]
@@ -433,10 +383,14 @@ def extract_clauses(span):
 
         indirect_object = _find_matching_child(verb.root, ["dative"])
         direct_object = _find_matching_child(verb.root, ["dobj"])
-        complement = _find_matching_child(verb.root, ["ccomp", "acomp", "xcomp", "attr"])
-        adverbials = [extract_span_from_entity(c)
-                      for c in verb.root.children
-                      if c.dep_ in ("prep", "advmod", "agent")]
+        complement = _find_matching_child(
+            verb.root, ["ccomp", "acomp", "xcomp", "attr"]
+        )
+        adverbials = [
+            extract_span_from_entity(c)
+            for c in verb.root.children
+            if c.dep_ in ("prep", "advmod", "agent")
+        ]
 
         clause = Clause(
             subject=subject,
@@ -444,7 +398,8 @@ def extract_clauses(span):
             indirect_object=indirect_object,
             direct_object=direct_object,
             complement=complement,
-            adverbials=adverbials)
+            adverbials=adverbials,
+        )
         clauses.append(clause)
     return clauses
 
@@ -512,7 +467,7 @@ def extract_ccs_from_token(token):
 def find_verb_subject(v):
     """
     Returns the nsubj, nsubjpass of the verb. If it does not exist and the root is a head,
-    find the subject of that verb instead. 
+    find the subject of that verb instead.
     """
     if v.dep_ in ["nsubj", "nsubjpass", "nsubj:pass"]:
         return v
