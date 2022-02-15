@@ -12,10 +12,10 @@ import unittest
 
 setup(
     name="claucy",
-    version="0.0.1.991",
+    version="0.0.2.000",
     packages=find_packages(),
     # scripts=['claucy/__init__.py', 'clausiepy/__init__.py'],
-    install_requires=["spacy>=2.3.0,<3.0.0", "lemminflect>=0.2.1"],
+    install_requires=["spacy>=3.0.0", "lemminflect>=0.2.1"],
     test_suite="tests.test_suite",
     author="Emmanouil Theofanis Chourdakis",
     author_email="etchourdakis@gmail.com",

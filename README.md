@@ -55,7 +55,7 @@ pages={9}
 ```
 
 ## Requirements
-- `spacy>=2.3.0,<3.0.0` (it does not work with spacy version 3 and above)
+- `spacy>=3.0.0`
 - `lemminflect>=0.2.1` (only if using the `inflect` argument in `to_propositions(as_text=True)`)
 - Python 3
 
@@ -70,6 +70,18 @@ $ python setup.py install [--user]
 $ python setup.py test
 ```
 
+Or with pip:
+
+```sh
+python -m pip install git+https://github.com/mmxgn/spacy-clausie.git
+```
+
+Download the pipeline if necessary:
+
+```sh
+python -m spacy download en_core_web_sm
+```
+
 ## Usage
 
 ### Python
@@ -78,7 +90,7 @@ $ python setup.py test
 $ ipython
 In [1]: import spacy                                                                                                                                               
 In [2]: import claucy                                                                                                                                               
-In [3]: nlp = spacy.load("en")
+In [3]: nlp = spacy.load("en_core_web_sm")
 In [4]: claucy.add_to_pipe(nlp)                                                                                                                                     
 In [5]: doc = nlp("AE died in Princeton in 1955.")                                                                                                                 
 In [6]: doc._.clauses                                                                                                                                               
