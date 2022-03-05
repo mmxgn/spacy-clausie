@@ -325,32 +325,21 @@ def _get_verb_chunks(span):
 
 
 def _get_subject(verb):
-    for c in verb.root.children:
-        if c.dep_ in ["nsubj", "nsubjpass"]:
-            subject = extract_span_from_entity(c)
-            return subject
-
     root = verb.root
-    while root.dep_ in ["conj", "cc", "advcl", "acl", "ccomp", "ROOT"]:
+    while root:
+        # Can we find subject at current level?
         for c in root.children:
             if c.dep_ in ["nsubj", "nsubjpass"]:
                 subject = extract_span_from_entity(c)
                 return subject
 
-            if c.dep_ in ["acl", "advcl"]:
-                subject = find_verb_subject(c)
-                return extract_span_from_entity(subject) if subject else None
-
-        # Break cycles
-        if root == verb.root.head:
-            break
+        # ... otherwise recurse up one level
+        if (root.dep_ in ["conj", "cc", "advcl", "acl", "ccomp"]
+            and root != root.head):
+            root = root.head
         else:
-            root = verb.root.head
+            root = None
 
-    for c in root.children:
-        if c.dep_ in ["nsubj", "nsubj:pass", "nsubjpass"]:
-            subject = extract_span_from_entity(c)
-            return subject
     return None
 
 
@@ -461,24 +450,6 @@ def extract_ccs_from_token(token):
         if c.dep_ == "conj":
             entities += extract_ccs_from_token(c)
     return entities
-
-
-def find_verb_subject(v):
-    """
-    Returns the nsubj, nsubjpass of the verb. If it does not exist and the root is a head,
-    find the subject of that verb instead.
-    """
-    if v.dep_ in ["nsubj", "nsubjpass", "nsubj:pass"]:
-        return v
-    # guard against infinite recursion on root token
-    elif v.dep_ in ["advcl", "acl"] and v.head.dep_ != "ROOT":
-        return find_verb_subject(v.head)
-
-    for c in v.children:
-        if c.dep_ in ["nsubj", "nsubjpass", "nsubj:pass"]:
-            return c
-        elif c.dep_ in ["advcl", "acl"] and v.head.dep_ != "ROOT":
-            return find_verb_subject(v.head)
 
 
 if __name__ == "__main__":

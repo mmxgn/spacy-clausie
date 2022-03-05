@@ -71,6 +71,20 @@ sentences = [
     ],
 ]
 
+sentences_with_complex_structure = [
+    ('If an animal does not have a cattle passport, the keeper must notify its death to the Secretary of State in writing within seven days, and include the ear tag number, the date of death and the holding on which it died.',
+     {'<SVO, an animal, have, None, a cattle passport, None, []>',
+      '<SVO, the keeper, must notify, None, its death, None, [to the Secretary of State, in writing within seven days]>',
+      '<SVO, the keeper, include, None, the ear tag number, the date of death and the holding on which it died, None, []>',
+      '<SV, it, died, None, None, None, [on which]>'}),
+    ('I doubt that the very few who read my blog have not come across this yet.',
+     {'<SVC, I, doubt, None, None, that the very few who read my blog have not come across this yet, []>',
+      '<SVO, who, read, None, my blog, None, []>',
+      '<SVA, the very few who read my blog, come, None, None, None, [across this, yet]>'}),
+    ('He ate, drank and danced.',
+     {'<SV, He, ate, None, None, None, []>', '<SV, He, drank, None, None, None, []>', '<SV, He, danced, None, None, None, []>'})]
+
+
 
 class Test_ClauCy(unittest.TestCase):
     def test_parse(self):
@@ -123,6 +137,16 @@ class Test_ClauCy(unittest.TestCase):
                 # assert props[n] == sent[2][n], "Expected: {}, got: {}".format(
                 #     sent[2][n], props[n]
                 # )
+
+    def test_sentences_with_complex_structure(self):
+        import spacy
+        nlp = spacy.load("en_core_web_sm")
+        claucy.add_to_pipe(nlp)
+
+        for sent, expected_clauses in sentences_with_complex_structure:
+            doc = nlp(sent)
+            self.assertTrue(expected_clauses
+                            == set(map(repr, doc._.clauses)))
 
 
 if __name__ == "__main__":
