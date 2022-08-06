@@ -147,7 +147,9 @@ claucy('Albert Einstein, a scientist of the 20th century, died in Princeton in 1
 
 The variable `Predicate` comes directly from the verb and `Arg1` and `Arg2` are the first and second arguments.
 
+## Got Questions?
 
+ Please kindly refrain from sending a personal e-mail to the contributors, instead open an issue.
 
 ## License
 
