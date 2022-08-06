@@ -149,7 +149,7 @@ The variable `Predicate` comes directly from the verb and `Arg1` and `Arg2` are 
 
 ## Got Questions?
 
- Please kindly refrain from sending a personal e-mail to the contributors, instead open an issue.
+ Please kindly refrain from sending a personal e-mail to the contributors, open an issue instead.
 
 ## License
 
