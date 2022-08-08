@@ -307,6 +307,8 @@ def _get_verb_matches(span):
     verb_matcher = Matcher(span.vocab)
     verb_matcher.add("Auxiliary verb phrase aux-verb", [
         [{"POS": "AUX"}, {"POS": "VERB"}]])
+    verb_matcher.add("Auxiliary negative verb phrase aux-part-verb", [
+        [{"POS": "AUX"},{"POS": "PART"},{"POS": "VERB"}]])
     verb_matcher.add("Auxiliary verb phrase", [[{"POS": "AUX"}]])
     verb_matcher.add("Verb phrase", [[{"POS": "VERB"}]],)
 
